@@ -35,6 +35,14 @@ namespace GI
         private GestureRecognizer gestureRecognizer;
         private GameObject focusedObject;
 
+        private bool tapEvent = false;
+        private bool clearTapEvent = false;
+        [HideInInspector]
+        public bool TapEvent
+        {
+            get { return tapEvent; }
+        }
+
         void Start()
         {
             // Create a new GestureRecognizer. Sign up for tapped events.
@@ -53,10 +61,21 @@ namespace GI
             {
                 focusedObject.SendMessage("OnSelect");
             }
+            tapEvent = true;
         }
 
         void LateUpdate()
         {
+            if (clearTapEvent)
+            {
+                tapEvent = false;
+                clearTapEvent = false;
+            }
+            if (tapEvent)
+            {
+                clearTapEvent = true;
+            }
+
             GameObject oldFocusedObject = focusedObject;
 
             if (GazeManager.Instance.Hit &&
