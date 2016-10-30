@@ -17,8 +17,6 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        age += Time.deltaTime;
-        //temp();
         if (age > lifeSpan && GetComponent<Rigidbody>().velocity.magnitude < stoppedThreashold)
         {
             Destroy(this);

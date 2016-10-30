@@ -21,10 +21,13 @@ public class BounceLauncher : MonoBehaviour {
         movable = GetComponent<Movable>();
     }
 
+    void Update()
     {
+        //Logger.Log("Anything?");
         if (Input.GetKeyDown(KeyCode.L))
         {
             LaunchBall(new Vector3(0, 0, 1));
+            Logger.Log("shoot");
         }
     }
 
@@ -35,6 +38,7 @@ public class BounceLauncher : MonoBehaviour {
         GI.HandsManager handManager = GI.HandsManager.Instance;
         if (handManager.NumberOfTrackedHands == 1)
         {
+            Logger.Log("1 hand tracking", this);
             movable.StartMoving();
 
             sphereRef.SetActive(true);
@@ -60,6 +64,7 @@ public class BounceLauncher : MonoBehaviour {
         }
         else
         {
+            Logger.Log("Not tracking", this);
             temp.SetActive(false);
             //lastLocation = new Vector3();
         }

@@ -1,33 +1,30 @@
 ﻿using System.Collections.Generic;
 using System;
 
-public static class GameManager
+public static class Logger
 {
 
-    static bool useUnityLogger = true;
+    //static bool useUnityLogger = false;
 
     static LogLevel currentLogLevel = LogLevel.Warning;
 
-    public static UnityEngine.GameObject inGameLogConsole;
+    public static InGamePanel inGameLogConsole = UnityEngine.Object.FindObjectOfType<InGamePanel>();
 
     static LinkedList<LogMessage> log = new LinkedList<LogMessage>();
     
     private static LinkedList<KeyValuePair<DateTime, LinkedListNode<LogMessage>>> toBeRemoved = new LinkedList<KeyValuePair<DateTime, LinkedListNode<LogMessage>>>();
-
-    public static void Log(object toPrint, object callingClass = null, LogLevel logLevel = LogLevel.Warning)
-    {
-
-    }
+    
 
     public static void Log(object toPrint, object callingClass = null, LogLevel logLevel = LogLevel.Warning, float duration = 0)
     {
+
         if (currentLogLevel != LogLevel.None && currentLogLevel >= logLevel)
         {
-            if (useUnityLogger)
+            if (UnityEngine.Application.isEditor && false)
             {
                 UnityEngine.Debug.Log(toPrint);
             }
-            else
+            else if (inGameLogConsole != null)
             {
                 log.AddLast(new LogMessage(toPrint, callingClass != null ? callingClass.ToString() : "", logLevel));
                 if (duration > 0)
@@ -35,7 +32,7 @@ public static class GameManager
                     
                     //DateTime.Now.se;
                 }
-                inGameLogConsole.SendMessage("LogMesasge", log.Last);
+                inGameLogConsole.UpdateLog(log);
             }
 
         }

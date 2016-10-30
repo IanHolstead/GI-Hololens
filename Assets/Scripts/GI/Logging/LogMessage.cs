@@ -21,4 +21,9 @@ public class LogMessage {
         this.callingMethod = callingMethod.GetType().ToString(); //TODO
         this.level = level;
     }
+
+    public override string ToString()
+    {
+        return logMessage;
+    }
 }
