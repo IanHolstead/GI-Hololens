@@ -1,41 +1,72 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.VR.WSA.Input;
 
 namespace GI {
     public class Movable : MonoBehaviour {
 
-        private Vector3 lastLocation = new Vector3();
-        private uint? currentHandID = null; 
+        private Vector3 lastHandLocation = new Vector3();
+        private uint? currentHandID = null;
+        private GestureRecognizer gestureRecognizer;
+        //private float time;
 
         public GameObject cameraRef;
-        GameObject objectToMove;
+
+        void Start()
+        {
+            // Create a new GestureRecognizer. Sign up for tapped events.
+            gestureRecognizer = new GestureRecognizer();
+            //gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.Hold | GestureSettings.DoubleTap | GestureSettings.ManipulationTranslate);
+            gestureRecognizer.SetRecognizableGestures(GestureSettings.ManipulationTranslate);
+            //gestureRecognizer.TappedEvent += OnTappedEvent;
+            //gestureRecognizer.HoldStartedEvent += OnHoldStartedEvent;
+            gestureRecognizer.ManipulationStartedEvent += OnManipulationStartedEvent;
+            //gestureRecognizer.RecognitionStartedEvent += OnRecognitionStartedEvent;
+            //gestureRecognizer.ManipulationUpdatedEvent += OnManipulationUpdatedEvent;
+            gestureRecognizer.ManipulationCompletedEvent += OnManipulationEndedEvent;
+
+            // Start looking for gestures.
+            gestureRecognizer.StartCapturingGestures();
+        }
 
         void Update()
         {
+            //time += Time.deltaTime;
+
             if (currentHandID != null)
             {
-                if (lastLocation != Vector3.zero)
+                if (lastHandLocation != Vector3.zero)
                 {
-                    Vector3 currentLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
+                    Vector3 currentHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
 
                     //normalize about camera
-                    currentLocation -= cameraRef.transform.position;
-                    lastLocation -= cameraRef.transform.position;
+                    currentHandLocation -= cameraRef.transform.position;
+                    lastHandLocation -= cameraRef.transform.position;
 
-                    float angle = Vector3.Angle(lastLocation, currentLocation);
+                    if (currentHandLocation.magnitude / lastHandLocation.magnitude < .7)
+                    {
+                        //this means the hand isn't tracking or something is up
+                        return;
+                    }
 
                     
+                    float angle = Vector3.Angle(lastHandLocation, currentHandLocation);
 
-                    
-                    transform.Translate((HandsManager.Instance.GetHandLocation(currentHandID.Value) - lastLocation) * 2.5f);
+                    transform.RotateAround(cameraRef.transform.position, Vector3.Cross(lastHandLocation, currentHandLocation), angle);
+                    //lock axis
+                    transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+
+                    transform.position = transform.position * currentHandLocation.magnitude / lastHandLocation.magnitude;
+
+                    Debug.Log(currentHandLocation.magnitude / lastHandLocation.magnitude);
                 }
 
-                lastLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
+                lastHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
 
             }
             else
             {
-                lastLocation = Vector3.zero;
+                lastHandLocation = Vector3.zero;
             }
         }
 
@@ -61,5 +92,41 @@ namespace GI {
             }
             return false;
         }
+
+        //void OnTappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
+        //{
+        //    Logger.Log("OnTap + " + tapCount);
+        //}
+
+        void OnManipulationStartedEvent(InteractionSourceKind source, Vector3 translation, Ray headRay)
+        {
+            Logger.Log("Manipulation Started");
+            if (GazeManager.Instance.HitInfo.collider.gameObject.GetComponent<Movable>() == this)
+            {
+                StartMoving();
+            }
+        }
+
+        //void OnManipulationUpdatedEvent(InteractionSourceKind source, Vector3 translation, Ray headRay)
+        //{
+        //    //Logger.Log("OnManipulation " + translation);
+        //}
+
+        void OnManipulationEndedEvent(InteractionSourceKind source, Vector3 translation, Ray headRay)
+        {
+            Logger.Log("Manipulation Ended");
+            FinishMoving();
+        }
+
+        //void OnHoldStartedEvent(InteractionSourceKind source, Ray headRay)
+        //{
+        //    //Logger.Log("OnHold " + time);
+        //}
+
+        //void OnRecognitionStartedEvent(InteractionSourceKind source, Ray headRay)
+        //{
+        //    //Logger.Log("OnRecognition");
+        //    time = 0f;
+        //}
     }
 }

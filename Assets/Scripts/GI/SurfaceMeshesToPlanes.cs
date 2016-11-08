@@ -79,17 +79,17 @@ namespace GI
         /// </summary>
         private bool makingPlanes = false;
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
         /// <summary>
         /// How much time (in sec), while running in the Unity Editor, to allow RemoveSurfaceVertices to consume before returning control to the main program.
         /// </summary>
-        private static readonly float FrameTime = .016f;
-#else
+        //private static readonly float FrameTime = .016f;
+//#else
         /// <summary>
         /// How much time (in sec) to allow RemoveSurfaceVertices to consume before returning control to the main program.
         /// </summary>
         private static readonly float FrameTime = .008f;
-#endif
+//#endif
 
         // GameObject initialization.
         private void Start()

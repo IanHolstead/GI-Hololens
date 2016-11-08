@@ -9,25 +9,20 @@ public class BounceLauncher : MonoBehaviour {
     
     public GameObject sphereRef;
     public GameObject ballPrefab;
-     
-    public GameObject temp;
+    public GameObject cameraRef;
     
     private bool toggle = true; 
     private float timeSinceLastShot = 0f;
     private uint? currentHandID = null;
-    private Movable movable;
 
     void Start () {
-        movable = GetComponent<Movable>();
     }
 
     void Update()
     {
-        //Logger.Log("Anything?");
         if (Input.GetKeyDown(KeyCode.L))
         {
-            LaunchBall(new Vector3(0, 0, 1));
-            Logger.Log("shoot");
+            Logger.Log("Press");
         }
     }
 
@@ -38,8 +33,11 @@ public class BounceLauncher : MonoBehaviour {
         GI.HandsManager handManager = GI.HandsManager.Instance;
         if (handManager.NumberOfTrackedHands == 1)
         {
-            Logger.Log("1 hand tracking", this);
-            movable.StartMoving();
+            if (currentHandID == null || !handManager.IsHandTracked(currentHandID.Value))
+            {
+                currentHandID = handManager.GetBestHand();
+            }
+            //Logger.Log("1 hand tracking", this);
 
             sphereRef.SetActive(true);
 
@@ -49,48 +47,36 @@ public class BounceLauncher : MonoBehaviour {
             {
                 LaunchBall(sphereRef.transform.position);
             }
-            temp.SetActive(true);
-
-            //if (lastLocation != Vector3.zero)
-            //{
-            //    //This needs to consider the distance from the camera (further distance means it will have to travel further)
-            //    temp.transform.Translate((handManager.GetHandLocation(handManager.GetBestHand()) - lastLocation) * 2.5f);
-            //}
-            //else
-            //{
-            //    temp.transform.position = cameraRef.transform.position + cameraRef.transform.forward * 1.5f;
-            //}
-            //lastLocation = handManager.GetHandLocation(handManager.GetBestHand());
+        }
+        else if (handManager.NumberOfTrackedHands == 2)
+        {
+            //Logger.Log("2 hands tracking", this);
+            if (toggle)
+            {
+                toggle = false;
+                SpatialMappingManager.Instance.drawVisualMeshes ^= SpatialMappingManager.Instance.drawVisualMeshes;
+            }
+            
         }
         else
         {
-            Logger.Log("Not tracking", this);
-            temp.SetActive(false);
-            //lastLocation = new Vector3();
-        }
-        if (handManager.NumberOfTrackedHands == 2 && toggle)
-        {
-            toggle = false;
-            GI.SpatialMappingManager.Instance.drawVisualMeshes ^= GI.SpatialMappingManager.Instance.drawVisualMeshes;
-        }
-        else
-        {
+            //Logger.Log("Not tracking", this);
             toggle = true;
+
         }
+
         if (timeSinceLastShot < .5f)
         {
             sphereRef.SetActive(false);
         }
-        
-        //System.Diagnostics.Debug.WriteLine(sphereRef.transform);
     }
 
     void LaunchBall(Vector3 hand)
     {
-        Vector3 direction = Vector3.Normalize(hand - movable.cameraRef.transform.position);
+        Vector3 direction = Vector3.Normalize(hand - cameraRef.transform.position);
         direction *= velocity;
 
-        GameObject newBall = (GameObject)Instantiate(ballPrefab, hand, movable.cameraRef.transform.rotation);
+        GameObject newBall = (GameObject)Instantiate(ballPrefab, hand, cameraRef.transform.rotation);
         newBall.GetComponent<Rigidbody>().velocity = direction;
         timeSinceLastShot = 0;
     }

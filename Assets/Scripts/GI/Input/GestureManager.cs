@@ -35,6 +35,9 @@ namespace GI
         private GestureRecognizer gestureRecognizer;
         private GameObject focusedObject;
 
+        public bool blockTapEvents = false;
+
+
         private bool tapEvent = false;
         private bool clearTapEvent = false;
         [HideInInspector]
@@ -48,20 +51,10 @@ namespace GI
             // Create a new GestureRecognizer. Sign up for tapped events.
             gestureRecognizer = new GestureRecognizer();
             gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap);
-
-            gestureRecognizer.TappedEvent += GestureRecognizer_TappedEvent;
+            gestureRecognizer.TappedEvent += GestureRecognizerTappedEvent;
 
             // Start looking for gestures.
             gestureRecognizer.StartCapturingGestures();
-        }
-
-        private void GestureRecognizer_TappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
-        {
-            if (focusedObject != null)
-            {
-                focusedObject.SendMessage("OnSelect");
-            }
-            tapEvent = true;
         }
 
         void LateUpdate()
@@ -84,7 +77,10 @@ namespace GI
             {
                 // If gaze hits a hologram, set the focused object to that game object.
                 // Also if the caller has not decided to override the focused object.
-                focusedObject = GazeManager.Instance.HitInfo.collider.gameObject;
+                if (GazeManager.Instance.HitInfo.collider.gameObject.tag == "ReceiveTaps")
+                {
+                    focusedObject = GazeManager.Instance.HitInfo.collider.gameObject;
+                }
             }
             else
             {
@@ -104,7 +100,22 @@ namespace GI
         void OnDestroy()
         {
             gestureRecognizer.StopCapturingGestures();
-            gestureRecognizer.TappedEvent -= GestureRecognizer_TappedEvent;
+            gestureRecognizer.TappedEvent -= GestureRecognizerTappedEvent;
+        }
+
+
+        private void GestureRecognizerTappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
+        {
+            if (!blockTapEvents)
+            {
+                if (focusedObject != null)
+                {
+                    //Object must have the 'ReceiveTaps' Tag!
+                    focusedObject.SendMessage("OnSelect");
+                }
+                tapEvent = true;
+            }
+            Logger.Log("Block Tap Events: "+blockTapEvents);
         }
     }
 }

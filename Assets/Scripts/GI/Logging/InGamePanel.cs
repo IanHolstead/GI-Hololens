@@ -4,12 +4,21 @@ using System.Collections.Generic;
 public class InGamePanel : MonoBehaviour {
 
     public int linesOfText = 20;
+    public bool showPannel = true;
+    Canvas canvas;
+
+    private float counter = 0;
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
+        canvas = GetComponent<Canvas>();
+        SetState(showPannel);
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        counter += Time.deltaTime;
+        
         //Logger.Log("why");
 	}
 
@@ -37,7 +46,11 @@ public class InGamePanel : MonoBehaviour {
 
         for (int i = 0; i < linesOfText && i < messages.Count; i++)
         {
-            logText += currentNode.Value.ToString() + "\n";
+            for (int j = 0; j < 3 - Mathf.Floor(Mathf.Log10(messages.Count - i) + 1); j++)
+            {
+                logText += " ";
+            }
+            logText += messages.Count - i +" " + currentNode.Value.ToString() + "\n";
             currentNode = currentNode.Previous;
         }
         //Canvas bla = GetComponent<Canvas>();
@@ -47,7 +60,24 @@ public class InGamePanel : MonoBehaviour {
         //{
         //    Debug.Log("why" + blas);
         //}
-        
+
         GetComponentInChildren<UnityEngine.UI.Text>().text = logText;
+    }
+
+    public void Enable()
+    {
+        SetState(true);
+    }
+
+    public void Disable()
+    {
+        SetState(false);
+    }
+
+    private void SetState(bool enabled)
+    {
+        showPannel = enabled;
+        canvas.enabled = enabled;
+        Logger.useInGameLogger = enabled;
     }
 }

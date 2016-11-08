@@ -4,7 +4,7 @@ using System;
 public static class Logger
 {
 
-    //static bool useUnityLogger = false;
+    public static bool useInGameLogger = false;
 
     static LogLevel currentLogLevel = LogLevel.Warning;
 
@@ -20,11 +20,11 @@ public static class Logger
 
         if (currentLogLevel != LogLevel.None && currentLogLevel >= logLevel)
         {
-            if (UnityEngine.Application.isEditor && false)
+            if (UnityEngine.Application.isEditor && !useInGameLogger)
             {
                 UnityEngine.Debug.Log(toPrint);
             }
-            else if (inGameLogConsole != null)
+            else if (useInGameLogger && inGameLogConsole != null)
             {
                 log.AddLast(new LogMessage(toPrint, callingClass != null ? callingClass.ToString() : "", logLevel));
                 if (duration > 0)
