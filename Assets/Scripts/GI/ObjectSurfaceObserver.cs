@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GI
@@ -10,6 +9,20 @@ namespace GI
     {
         [Tooltip("The room model to use when loading meshes in Unity.")]
         public GameObject roomModel;
+        
+//        // Use this for initialization.
+//        private void Start()
+//        {
+//#if UNITY_EDITOR
+//            // When in the Unity editor, try loading saved meshes from a model.
+//            Load(roomModel);
+
+//            if (GetMeshFilters().Count > 0)
+//            {
+//                SpatialMappingManager.Instance.SetSpatialMappingSource(this);
+//            }
+//#endif
+//        }
 
         /// <summary>
         /// Loads the SpatialMapping mesh from the specified room object.
@@ -32,7 +45,7 @@ namespace GI
 
                 foreach (MeshFilter filter in roomFilters)
                 {
-                    GameObject surface = AddSurfaceObject(filter.sharedMesh, "roomMesh-" + surfaceObjects.Count, transform);
+                    GameObject surface = AddSurfaceObject(filter.sharedMesh, "roomMesh-" + SurfaceObjects.Count, transform);
                     Renderer renderer = surface.GetComponent<MeshRenderer>();
 
                     if (SpatialMappingManager.Instance.DrawVisualMeshes == false)

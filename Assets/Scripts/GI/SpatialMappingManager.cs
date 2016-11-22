@@ -4,6 +4,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace GI
 {
     /// <summary>
@@ -24,8 +28,8 @@ namespace GI
         [Tooltip("Determines if spatial mapping data will be rendered.")]
         public bool drawVisualMeshes = false;
 
-        [Tooltip("Determines if spatial mapping data will be rendered as points, overrides the above.")]
-        public bool drawFastPointCloud = true;
+        [Tooltip("Determines if the surface observer should be automatically started.")]
+        public bool autoStartObserver = true;
 
         [Tooltip("Determines if spatial mapping data will cast shadows.")]
         public bool castShadows = false;
@@ -34,11 +38,6 @@ namespace GI
         /// Used for gathering real-time Spatial Mapping data on the HoloLens.
         /// </summary>
         private SpatialMappingObserver surfaceObserver;
-
-        /// <summary>
-        /// Used for loading spatial mapping data from a room model.
-        /// </summary>
-        private ObjectSurfaceObserver objectSurfaceObserver;
 
         /// <summary>
         /// Time when StartObserver() was called.
@@ -61,25 +60,12 @@ namespace GI
         // Use for initialization.
         private void Start()
         {
-
-//#if !UNITY_EDITOR
-            StartObserver();
-//#endif
-
-//#if UNITY_EDITOR
-//            objectSurfaceObserver = GetComponent<ObjectSurfaceObserver>();
-
-//            if (objectSurfaceObserver != null)
-//            {
-//                // In the Unity editor, try loading saved meshes from a model.
-//                objectSurfaceObserver.Load(objectSurfaceObserver.roomModel);
-
-//                if (objectSurfaceObserver.GetMeshFilters().Count > 0)
-//                {
-//                    SetSpatialMappingSource(objectSurfaceObserver);
-//                }
-//            }
-//#endif
+            Debug.Log("Start()");
+            if (autoStartObserver)
+            {
+                Logger.Log("Observer start");
+                StartObserver();
+            }
         }
 
         /// <summary>
@@ -200,22 +186,28 @@ namespace GI
         /// </summary>
         public void StartObserver()
         {
+//#if !UNITY_EDITOR
+            Logger.Log("Starting");
             if (!IsObserverRunning())
             {
+                Logger.Log("Not running");
                 surfaceObserver.StartObserving();
                 StartTime = Time.time;
             }
+//#endif
         }
 
         /// <summary>
-        /// Instructs the SurfacesurfaceObserver to stop updating the SpatialMapping mesh.
+        /// Instructs the SurfaceObserver to stop updating the SpatialMapping mesh.
         /// </summary>
         public void StopObserver()
         {
+//#if !UNITY_EDITOR
             if (IsObserverRunning())
             {
                 surfaceObserver.StopObserving();
             }
+//#endif
         }
 
         /// <summary>
@@ -237,6 +229,15 @@ namespace GI
             }
 
             return meshes;
+        }
+
+        /// <summary>
+        /// Gets all the surface objects associated with the Spatial Mapping mesh.
+        /// </summary>
+        /// <returns>Collection of SurfaceObjects.</returns>
+        public List<SpatialMappingSource.SurfaceObject> GetSurfaceObjects()
+        {
+            return Source.SurfaceObjects;
         }
 
         /// <summary>
@@ -272,6 +273,7 @@ namespace GI
 
         /// <summary>
         /// Updates the rendering state on the currently enabled surfaces.
+        /// Updates the material and shadow casting mode for each renderer.
         /// </summary>
         /// <param name="Enable">True, if meshes should be rendered.</param>
         private void UpdateRendering(bool Enable)

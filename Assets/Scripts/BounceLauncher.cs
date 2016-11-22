@@ -54,7 +54,7 @@ public class BounceLauncher : MonoBehaviour {
             if (toggle)
             {
                 toggle = false;
-                SpatialMappingManager.Instance.drawVisualMeshes ^= SpatialMappingManager.Instance.drawVisualMeshes;
+                SpatialMappingManager.Instance.DrawVisualMeshes ^= SpatialMappingManager.Instance.DrawVisualMeshes;
             }
             
         }

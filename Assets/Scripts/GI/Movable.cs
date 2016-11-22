@@ -43,7 +43,7 @@ namespace GI {
                     currentHandLocation -= cameraRef.transform.position;
                     lastHandLocation -= cameraRef.transform.position;
 
-                    if (currentHandLocation.magnitude / lastHandLocation.magnitude < .7)
+                    if (currentHandLocation.magnitude / lastHandLocation.magnitude < .9 || currentHandLocation.magnitude / lastHandLocation.magnitude > 1.1)
                     {
                         //this means the hand isn't tracking or something is up
                         return;
@@ -53,15 +53,21 @@ namespace GI {
                     float angle = Vector3.Angle(lastHandLocation, currentHandLocation);
 
                     transform.RotateAround(cameraRef.transform.position, Vector3.Cross(lastHandLocation, currentHandLocation), angle);
+                    //transform.RotateAround(cameraRef.transform.position, Vector3.up, angle);
                     //lock axis
                     transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 
-                    transform.position = transform.position * currentHandLocation.magnitude / lastHandLocation.magnitude;
+                    transform.position = transform.position * Vector3.Project(currentHandLocation, lastHandLocation).magnitude / lastHandLocation.magnitude;
+                    //transform.position = transform.position * currentHandLocation.magnitude / lastHandLocation.magnitude;
 
                     Debug.Log(currentHandLocation.magnitude / lastHandLocation.magnitude);
                 }
+                else
+                {
+                    transform.rotation = Quaternion.LookRotation(HandsManager.Instance.GetHandLocation(currentHandID.Value) - cameraRef.transform.position);
+                }
 
-                lastHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
+                lastHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);// - cameraRef.transform.position;
 
             }
             else

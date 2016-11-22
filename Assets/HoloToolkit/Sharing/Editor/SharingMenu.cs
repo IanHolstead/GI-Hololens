@@ -13,7 +13,7 @@ namespace HoloToolkit.Sharing
         public static void LaunchSessionServer()
         {
             string filePathName = @"External\HoloToolkit\Sharing\Server\SharingService.exe";
-
+            //string filePathName = @"HoloToolkit\Sharing\SharingService\SharingService.exe";
             if (!File.Exists(filePathName))
             {
                 Debug.LogError("Sharing service does not exist at location: " + filePathName);
