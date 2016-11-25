@@ -4,8 +4,26 @@ using UnityEngine;
 
 public class PlayerState : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+    int id;
+
+    public int ID
+    {
+        get
+        {
+            return id;
+        }
+    }
+
+    public void SetID(int id)
+    {
+        if (id == -1)
+        {
+            this.id = id;
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
