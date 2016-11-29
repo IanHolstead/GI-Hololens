@@ -1,16 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Character : MonoBehaviour {
+public class Character : NetworkBehaviour {
 
-    PlayerState state;
-    PlayerController controller;
+    private PlayerState state;
+    private PlayerController controller;
+
+    public PlayerState State
+    {
+        get
+        {
+            return state;
+        }
+    }
 
     void Awake()
     {
-        gameObject.AddComponent(GameManager.Instance.GetGameMode().playerState.GetType());
-        state.SetID(GameManager.Instance.GetGameMode().RegisterNewCharacter(this));
+        state = (PlayerState)gameObject.AddComponent(((MyNetworkManager)NetworkManager.singleton).playerState.GetClass());
+        State.SetID(((MyNetworkManager)NetworkManager.singleton).RegisterNewCharacter(this));
     }
 
 	// Use this for initialization
@@ -24,7 +33,7 @@ public class Character : MonoBehaviour {
 	}
 
     /// <summary>
-    /// Do not call this (call possess on the player controller).
+    /// 
     /// </summary>
     /// <returns>false if already possessed</returns>
     public bool CanPossess()
@@ -37,7 +46,17 @@ public class Character : MonoBehaviour {
         return true;
     }
 
-    public void UnPossess()
+    public bool Possess(PlayerController controller)
+    {
+        if (CanPossess())
+        {
+            this.controller = controller;
+            return true;
+        }
+        return false;
+    }
+
+    public void UnPossess(PlayerController controller)
     {
         controller = null;
     }

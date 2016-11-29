@@ -1,15 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using ControlWrapping;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : NetworkBehaviour {
     
     HashSet<Character> charactersPossessed;
     /// <summary>
     /// Can this controller possess multiple characters at once?
     /// </summary>
-    bool allowMultiPossess;
+    bool allowMultiPossess = false; 
     int id;
 
     public int ID
@@ -30,17 +31,19 @@ public class PlayerController : MonoBehaviour {
 
     GamePadWrapper.UpdateStateDel gamePadStateUpdater;
     GamePadWrapper gamePad;
-
+     
     void Awake () {
-        id = GameManager.Instance.GetGameMode().RegisterNewPlayer(this);
+        charactersPossessed = new HashSet<Character>();
+        id = ((MyNetworkManager)NetworkManager.singleton).RegisterNewPlayer(this);
         //TODO, need to have a gamePad manager or something
-        gamePad = new GamePadWrapper(0);
-        gamePadStateUpdater = gamePad.UpdateState;
+        //gamePad = new GamePadWrapper(0);
+        //gamePadStateUpdater = gamePad.UpdateState;
+        //gamePadStateUpdater(0f);
     }
-	
-	// Update is called once per frame
-	void Update () {
-        gamePadStateUpdater(Time.deltaTime);
+
+    // Update is called once per frame
+    void Update () {
+        //gamePadStateUpdater(Time.deltaTime);
 	}
 
     /// <summary>
@@ -52,24 +55,23 @@ public class PlayerController : MonoBehaviour {
     {
         if (charactersPossessed.Count == 0 || allowMultiPossess)
         {
-            if (character.CanPossess())
+            if (character.Possess(this))
             {
                 charactersPossessed.Add(character);
+                character.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
+                //todo
             }
-            
         }
         return false;
     }
 
-    public void UnPossess(Character character = null)
+    public void UnPossess(Character character)
     {
-        if (!allowMultiPossess && character == null)
-        {
-            charactersPossessed.Clear();
-        }
         if (charactersPossessed.Contains(character))
         {
             charactersPossessed.Remove(character);
+            character.UnPossess(this);
+            character.GetComponent<NetworkIdentity>().RemoveClientAuthority(connectionToClient);
         }
         return;
     }

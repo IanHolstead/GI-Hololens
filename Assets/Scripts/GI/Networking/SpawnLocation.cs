@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
+[RequireComponent(typeof(NetworkStartPosition))]
 public class SpawnLocation : MonoBehaviour {
 
     private bool isValid = true;

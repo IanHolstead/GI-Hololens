@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerState : MonoBehaviour {
+public class PlayerState : NetworkBehaviour {
 
     int id;
 
