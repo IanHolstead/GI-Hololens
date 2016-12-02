@@ -18,7 +18,8 @@ public class Character : NetworkBehaviour {
 
     void Awake()
     {
-        state = (PlayerState)gameObject.AddComponent(((MyNetworkManager)NetworkManager.singleton).playerState.GetClass());
+        state = (PlayerState)gameObject.AddComponent(typeof(PlayerState));
+        //state = (PlayerState)gameObject.AddComponent(((MyNetworkManager)NetworkManager.singleton).playerState.GetClass());
         State.SetID(((MyNetworkManager)NetworkManager.singleton).RegisterNewCharacter(this));
     }
 

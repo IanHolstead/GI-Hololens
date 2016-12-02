@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class GameMode : NetworkBehaviour
 {
     public SpawnLocation spawnLocation;
-
+    
     // Use this for initialization
     void Awake () {
         spawnLocation = FindObjectOfType<SpawnLocation>();

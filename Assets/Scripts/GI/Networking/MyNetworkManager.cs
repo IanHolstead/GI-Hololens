@@ -5,17 +5,21 @@ using UnityEngine.Networking;
 
 public class MyNetworkManager : NetworkManager {
     [Header("Gameplay Script Classes")]
-    public UnityEditor.MonoScript gameMode;
-    public UnityEditor.MonoScript gameState;
-    public UnityEditor.MonoScript playerState;
-    public UnityEditor.MonoScript playerCharacter;
-    public UnityEditor.MonoScript playerController;
+    //public UnityEditor.MonoScript gameMode;
+    //public UnityEditor.MonoScript gameState;
+    //public UnityEditor.MonoScript playerState;
+    //public UnityEditor.MonoScript playerCharacter;
+    //public UnityEditor.MonoScript playerController;
+
+    public PlayerController bla;
 
     [Header("Gameplay Prefabs")]
-    [Tooltip("Remember to add to spawnable prefabs!")]
+    [Tooltip("Remember to add to this to the spawnable prefabs list!")]
     public GameObject gameModePrefab;
-    [Tooltip("Remember to add to spawnable prefabs!")]
+    [Tooltip("Remember to add to this to the spawnable prefabs list")]
     public GameObject gameStatePrefab;
+    [Tooltip("Remember to add to this to the spawnable prefabs list")]
+    public GameObject characterPrefab;
 
     private int nextPlayerID = 0;
     private int nextCharacterID = 0;
@@ -26,11 +30,13 @@ public class MyNetworkManager : NetworkManager {
     public void Awake()
     {
         GameObject gameModeRef = Instantiate(gameModePrefab);
-        currentGameMode = (GameMode)gameModeRef.AddComponent(gameMode.GetClass());
+        currentGameMode = (GameMode)gameModeRef.AddComponent(typeof(GameMode));
+        //currentGameMode = (GameMode)gameModeRef.AddComponent(gameMode.GetClass());
         //NetworkServer.Spawn(gameModeRef);
 
         GameObject gameStateRef = Instantiate(gameStatePrefab);
-        currentGameState = (GameState)gameStateRef.AddComponent(gameState.GetClass());
+        currentGameState = (GameState)gameStateRef.AddComponent(typeof(GameState));
+        //currentGameState = (GameState)gameStateRef.AddComponent(gameState.GetClass());
         //NetworkServer.Spawn(gameStateRef);
     }
 
@@ -71,9 +77,10 @@ public class MyNetworkManager : NetworkManager {
     public void CreateNewCharacter(PlayerController controller)
     {
         //todo, I'd like to use SpawnLocation.GetSpawnLocation() so it can check if the spawn is valid at runtime
-        GameObject newCharacter = Instantiate(playerPrefab, transform);//startPositions[0]);
-        newCharacter.AddComponent(playerCharacter.GetClass());
-        //controller.Possess(newCharacter.GetComponent<Character>());
+        GameObject newCharacter = Instantiate(characterPrefab, startPositions[0]);
+        newCharacter.AddComponent(typeof(Character));
+        //newCharacter.AddComponent(playerCharacter.GetClass());
+        controller.Possess(newCharacter.GetComponent<Character>());
     }
 
     public int RegisterNewCharacter(Character character)

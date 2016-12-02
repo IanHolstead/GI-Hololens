@@ -36,9 +36,9 @@ public class PlayerController : NetworkBehaviour {
         charactersPossessed = new HashSet<Character>();
         id = ((MyNetworkManager)NetworkManager.singleton).RegisterNewPlayer(this);
         //TODO, need to have a gamePad manager or something
-        //gamePad = new GamePadWrapper(0);
-        //gamePadStateUpdater = gamePad.UpdateState;
-        //gamePadStateUpdater(0f);
+        gamePad = new GamePadWrapper(0);
+        gamePadStateUpdater = gamePad.UpdateState;
+        gamePadStateUpdater(0f);
     }
 
     // Update is called once per frame
