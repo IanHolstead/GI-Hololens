@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class PlayerState : NetworkBehaviour {
 
     int id;
+    private Character character;
 
     public int ID
     {
@@ -15,11 +16,32 @@ public class PlayerState : NetworkBehaviour {
         }
     }
 
+    public Character Character
+    {
+        set
+        {
+            if (character == null)
+            { 
+                character = value;
+            }
+        }
+    }
+
     public void SetID(int id)
     {
         if (id == -1)
         {
             this.id = id;
+        }
+    }
+
+    [ClientRpc]
+    public void RpcSetID(int id)
+    {
+        if (id == -1)
+        {
+            this.id = id;
+            ((MyNetworkManager)NetworkManager.singleton).GetGameState().AddCharacter(id, character);
         }
     }
 

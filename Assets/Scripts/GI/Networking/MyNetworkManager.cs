@@ -4,14 +4,13 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class MyNetworkManager : NetworkManager {
+
     [Header("Gameplay Script Classes")]
     //public UnityEditor.MonoScript gameMode;
     //public UnityEditor.MonoScript gameState;
     //public UnityEditor.MonoScript playerState;
     //public UnityEditor.MonoScript playerCharacter;
     //public UnityEditor.MonoScript playerController;
-
-    public PlayerController bla;
 
     [Header("Gameplay Prefabs")]
     [Tooltip("Remember to add to this to the spawnable prefabs list!")]
@@ -73,16 +72,18 @@ public class MyNetworkManager : NetworkManager {
         base.OnClientDisconnect(conn);
     }
 
-
+    [Server]
     public void CreateNewCharacter(PlayerController controller)
     {
-        //todo, I'd like to use SpawnLocation.GetSpawnLocation() so it can check if the spawn is valid at runtime
+        //TODO: I'd like to use SpawnLocation.GetSpawnLocation() so it can check if the spawn is valid at runtime
         GameObject newCharacter = Instantiate(characterPrefab, startPositions[0]);
         newCharacter.AddComponent(typeof(Character));
+        NetworkServer.Spawn(newCharacter);
         //newCharacter.AddComponent(playerCharacter.GetClass());
         controller.Possess(newCharacter.GetComponent<Character>());
     }
 
+    [Server]
     public int RegisterNewCharacter(Character character)
     {
         int assignedID = nextCharacterID;
@@ -93,6 +94,8 @@ public class MyNetworkManager : NetworkManager {
         return assignedID;
     }
 
+    //TODO: this isn't called
+    [Server]
     public bool RemoveCharacter(int id)
     {
         if (GetGameState().characters.ContainsKey(id))
@@ -103,25 +106,23 @@ public class MyNetworkManager : NetworkManager {
         return false;
     }
 
+    [Server]
     public int RegisterNewPlayer(PlayerController controller)
     {
         int assignedID = nextPlayerID;
         nextPlayerID++;
 
-        GetGameState().activeControllers.Add(assignedID, controller);
+        GetGameState().AddController(assignedID, controller);
         CreateNewCharacter(controller);
 
         return assignedID;
     }
 
+    //TODO: this isn't called
+    [Server]
     public bool RemovePlayer(int id)
     {
-        if (GetGameState().activeControllers.ContainsKey(id))
-        {
-            GetGameState().activeControllers.Remove(id);
-            return true;
-        }
-        return false;
+        return GetGameState().activeControllers.Remove(id);
     }
 
     //override 

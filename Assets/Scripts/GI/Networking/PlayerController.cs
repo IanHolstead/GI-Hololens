@@ -10,8 +10,9 @@ public class PlayerController : NetworkBehaviour {
     /// <summary>
     /// Can this controller possess multiple characters at once?
     /// </summary>
-    bool allowMultiPossess = false; 
-    int id;
+    bool allowMultiPossess = false;
+
+    int id = -1;
 
     public int ID
     {
@@ -21,36 +22,62 @@ public class PlayerController : NetworkBehaviour {
         }
     }
 
-    public void SetID(int id)
+    [ClientRpc]
+    public void RpcSetID(int id)
     {
         if (id == -1)
         {
             this.id = id;
+            ((MyNetworkManager)NetworkManager.singleton).GetGameState().AddController(id, this);
         }
     }
 
     GamePadWrapper.UpdateStateDel gamePadStateUpdater;
     GamePadWrapper gamePad;
-     
+
     void Awake () {
         charactersPossessed = new HashSet<Character>();
-        id = ((MyNetworkManager)NetworkManager.singleton).RegisterNewPlayer(this);
-        //TODO, need to have a gamePad manager or something
-        gamePad = new GamePadWrapper(0);
-        gamePadStateUpdater = gamePad.UpdateState;
-        gamePadStateUpdater(0f);
+        if (isServer)
+        {
+            id = ((MyNetworkManager)NetworkManager.singleton).RegisterNewPlayer(this);
+            RpcSetID(id);
+        }
+        
+        if (isLocalPlayer)
+        {
+            //TODO, need to have a gamePad manager or something
+            gamePad = new GamePadWrapper(0);
+            gamePadStateUpdater = gamePad.UpdateState;
+            gamePadStateUpdater(0f);
+        }
     }
 
     // Update is called once per frame
     void Update () {
+        //local client only
         //gamePadStateUpdater(Time.deltaTime);
 	}
+
+    [ClientRpc]
+    private void RpcSetCharacter(int characterID, bool possess)
+    {
+        Character character = ((MyNetworkManager)NetworkManager.singleton).GetGameState().GetPlayerCharacter(characterID);
+        if (possess)
+        {
+            charactersPossessed.Add(character);
+        }
+        else if (charactersPossessed.Contains(character))
+        {
+            charactersPossessed.Remove(character);
+        }
+    }
 
     /// <summary>
     /// call this is take control of a character using controller
     /// </summary>
     /// <param name="controller"></param>
     /// <returns>false if already possessed</returns>
+    [Server]
     public bool Possess(Character character)
     {
         if (charactersPossessed.Count == 0 || allowMultiPossess)
@@ -58,20 +85,24 @@ public class PlayerController : NetworkBehaviour {
             if (character.Possess(this))
             {
                 charactersPossessed.Add(character);
-                character.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
-                //todo
+                RpcSetCharacter(character.State.ID, true);
+                //TODO: not sure about this one vvv
+                //character.GetComponent<NetworkIdentity>().AssignClientAuthority(connectionToClient);
             }
         }
         return false;
     }
 
+    [Server]
     public void UnPossess(Character character)
     {
         if (charactersPossessed.Contains(character))
         {
             charactersPossessed.Remove(character);
             character.UnPossess(this);
-            character.GetComponent<NetworkIdentity>().RemoveClientAuthority(connectionToClient);
+            RpcSetCharacter(character.State.ID, false);
+            //TODO
+            //character.GetComponent<NetworkIdentity>().RemoveClientAuthority(connectionToClient);
         }
         return;
     }
