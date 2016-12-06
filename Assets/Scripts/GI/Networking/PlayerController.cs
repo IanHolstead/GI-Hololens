@@ -43,19 +43,12 @@ public class PlayerController : NetworkBehaviour {
             RpcSetID(id);
         }
         
-        if (isLocalPlayer)
-        {
-            //TODO, need to have a gamePad manager or something
-            gamePad = new GamePadWrapper(0);
-            gamePadStateUpdater = gamePad.UpdateState;
-            gamePadStateUpdater(0f);
-        }
     }
 
     // Update is called once per frame
-    void Update () {
-        //local client only
-        //gamePadStateUpdater(Time.deltaTime);
+    void Update ()
+    {
+
 	}
 
     [ClientRpc]
