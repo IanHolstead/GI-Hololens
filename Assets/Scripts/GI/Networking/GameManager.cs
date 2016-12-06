@@ -31,6 +31,7 @@ public class GameManager : NetworkBehaviour
         currentGameMode = (GameMode)gameModeRef.AddComponent(typeof(GameMode));
         //currentGameMode = (GameMode)gameModeRef.AddComponent(gameMode.GetClass());
         //NetworkServer.Spawn(gameModeRef);
+        //TODO: this doesn't look like it will be replicated nicely
 
         GameObject gameStateRef = Instantiate(gameStatePrefab);
         currentGameState = (GameState)gameStateRef.AddComponent(typeof(GameState));

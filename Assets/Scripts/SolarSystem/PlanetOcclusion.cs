@@ -37,7 +37,7 @@ public class PlanetOcclusion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /* TODO: 5.a DEVELOPER CODING EXERCISE 5.a */
+        /* 5.a DEVELOPER CODING EXERCISE 5.a */
 
         // Check to see if any of the planet's boundary points are occluded.
         for (int i = 0; i < checkPoints.Length; i++)

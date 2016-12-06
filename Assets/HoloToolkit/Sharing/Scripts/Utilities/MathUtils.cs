@@ -106,7 +106,7 @@ namespace HoloToolkit.Sharing.Utilities
         /// <returns></returns>
         public static Quaternion QuaternionFromMatrix(Matrix4x4 m)
         {
-            // TODO: test and replace with this simpler, more unity-friendly code
+            // : test and replace with this simpler, more unity-friendly code
             //       Quaternion q = Quaternion.LookRotation(m.GetColumn(2),m.GetColumn(1));
 
             Quaternion q = new Quaternion();
