@@ -20,6 +20,10 @@ public class Character : NetworkBehaviour {
     {
         state = (PlayerState)gameObject.AddComponent(typeof(PlayerState));
         state.Character = this;
+    }
+
+    void Start()
+    {
         //state = (PlayerState)gameObject.AddComponent(((MyNetworkManager)NetworkManager.singleton).playerState.GetClass());
         if (isServer)
         {
@@ -28,13 +32,7 @@ public class Character : NetworkBehaviour {
         }
     }
 
-	// Use this for initialization
-	void Start () {
-          
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Update () {
 		
 	}
 

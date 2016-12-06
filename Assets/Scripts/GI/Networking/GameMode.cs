@@ -39,7 +39,7 @@ public class GameMode : NetworkBehaviour
         int assignedID = nextCharacterID;
         nextCharacterID++;
 
-        GameManager.instance.GetGameState().characters.Add(assignedID, character);
+        GameManager.instance.GetGameState().AddCharacter(assignedID, character);
 
         return assignedID;
     }
@@ -48,12 +48,7 @@ public class GameMode : NetworkBehaviour
     [Server]
     public bool RemoveCharacter(int id)
     {
-        if (GameManager.instance.GetGameState().characters.ContainsKey(id))
-        {
-            GameManager.instance.GetGameState().characters.Remove(id);
-            return true;
-        }
-        return false;
+        return GameManager.instance.GetGameState().characters.Remove(id);
     }
 
     [Server]

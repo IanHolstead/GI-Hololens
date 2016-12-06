@@ -35,8 +35,22 @@ public class PlayerController : NetworkBehaviour {
     GamePadWrapper.UpdateStateDel gamePadStateUpdater;
     GamePadWrapper gamePad;
 
-    void Awake () {
+    void OnGUI()
+    {
+        if (GetComponent<NetworkIdentity>().isServer)
+            GUILayout.Label("Running as a server");
+        else
+            if (GetComponent<NetworkIdentity>().isClient)
+            GUILayout.Label("Running as a client");
+
+    }
+
+    void Awake() {
         charactersPossessed = new HashSet<Character>();
+    }
+
+    void Start()
+    {
         if (isServer)
         {
             id = GameManager.instance.GetGameMode().RegisterNewPlayer(this);
