@@ -35,13 +35,14 @@ public class PlayerState : NetworkBehaviour {
         }
     }
 
+    //TODO: I'd rather this not be public
     [ClientRpc]
     public void RpcSetID(int id)
     {
         if (id == -1)
         {
             this.id = id;
-            ((MyNetworkManager)NetworkManager.singleton).GetGameState().AddCharacter(id, character);
+            GameManager.instance.GetGameState().AddCharacter(id, character);
         }
     }
 

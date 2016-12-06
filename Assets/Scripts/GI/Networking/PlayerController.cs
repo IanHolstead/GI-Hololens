@@ -23,12 +23,12 @@ public class PlayerController : NetworkBehaviour {
     }
 
     [ClientRpc]
-    public void RpcSetID(int id)
+    private void RpcSetID(int id)
     {
         if (id == -1)
         {
             this.id = id;
-            ((MyNetworkManager)NetworkManager.singleton).GetGameState().AddController(id, this);
+            GameManager.instance.GetGameState().AddController(id, this);
         }
     }
 
@@ -39,7 +39,7 @@ public class PlayerController : NetworkBehaviour {
         charactersPossessed = new HashSet<Character>();
         if (isServer)
         {
-            id = ((MyNetworkManager)NetworkManager.singleton).RegisterNewPlayer(this);
+            id = GameManager.instance.GetGameMode().RegisterNewPlayer(this);
             RpcSetID(id);
         }
         
@@ -61,7 +61,7 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     private void RpcSetCharacter(int characterID, bool possess)
     {
-        Character character = ((MyNetworkManager)NetworkManager.singleton).GetGameState().GetPlayerCharacter(characterID);
+        Character character = GameManager.instance.GetGameState().GetPlayerCharacter(characterID);
         if (possess)
         {
             charactersPossessed.Add(character);

@@ -23,7 +23,7 @@ public class Character : NetworkBehaviour {
         //state = (PlayerState)gameObject.AddComponent(((MyNetworkManager)NetworkManager.singleton).playerState.GetClass());
         if (isServer)
         {
-            State.SetID(((MyNetworkManager)NetworkManager.singleton).RegisterNewCharacter(this));
+            State.SetID(GameManager.instance.GetGameMode().RegisterNewCharacter(this));
             state.RpcSetID(state.ID);
         }
     }
@@ -50,7 +50,7 @@ public class Character : NetworkBehaviour {
             controller = null;
             return;
         }
-        controller = ((MyNetworkManager)NetworkManager.singleton).GetGameState().GetPlayerController(playerControllerId);
+        controller = GameManager.instance.GetGameState().GetPlayerController(playerControllerId);
     }
 
     /// <summary>
