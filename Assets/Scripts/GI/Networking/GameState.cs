@@ -7,7 +7,7 @@ public class GameState : NetworkBehaviour
 {
 
     //public static GameState instance;
-    int localPlayerController;
+    int localPlayerController = -1;
 
     //TODO: make these hashsets? make these arrays?
     internal Dictionary<int, PlayerController> activeControllers;

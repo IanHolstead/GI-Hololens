@@ -7,6 +7,7 @@ namespace UnityEngine.Networking
 	[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
 	public class NetworkManagerHUD : MonoBehaviour
 	{
+        [HideInInspector]
 		public NetworkManager manager;
 		[SerializeField] public bool showGUI = true;
 		[SerializeField] public int offsetX;

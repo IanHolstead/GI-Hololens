@@ -71,6 +71,7 @@ public class Character : NetworkBehaviour {
         if (CanPossess())
         {
             this.controller = controller;
+            transform.position = controller.transform.position;
             RpcSetController(controller.ID);
             return true;
         }

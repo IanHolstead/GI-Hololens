@@ -39,6 +39,12 @@ public class GameManager : NetworkBehaviour
         //NetworkServer.Spawn(gameStateRef);
     }
 
+    void Start()
+    {
+        Logger.Log("test");
+        Debug.LogError("TEST");
+    }
+
     public GameMode GetGameMode()
     {
         return currentGameMode;

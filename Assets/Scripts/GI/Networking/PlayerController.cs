@@ -12,7 +12,7 @@ public class PlayerController : NetworkBehaviour {
     /// </summary>
     bool allowMultiPossess = false;
 
-    int id = -1;
+    public int id = -1;
 
     public int ID
     {
@@ -27,6 +27,7 @@ public class PlayerController : NetworkBehaviour {
     {
         if (id == -1)
         {
+            Logger.Log("PC: RPC " + id);
             this.id = id;
             GameManager.instance.GetGameState().AddController(id, this);
         }
@@ -45,25 +46,27 @@ public class PlayerController : NetworkBehaviour {
 
     }
 
-    void Awake() {
+    protected void Awake() {
         charactersPossessed = new HashSet<Character>();
     }
 
-    void Start()
+    protected void Start()
     {
         if (isServer)
         {
+            Logger.Log("PC: Server");
             id = GameManager.instance.GetGameMode().RegisterNewPlayer(this);
+            Logger.Log("PC: Server. ID: " + id);
             RpcSetID(id);
         }
         
     }
 
     // Update is called once per frame
-    void Update ()
-    {
-
-	}
+ //   void Update ()
+ //   {
+        
+	//}
 
     [ClientRpc]
     private void RpcSetCharacter(int characterID, bool possess)
