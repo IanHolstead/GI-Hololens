@@ -26,6 +26,7 @@ public class GameManager : NetworkBehaviour
 
     public void Awake()
     {
+        Logger.Log("GameManagerAwake");
         instance = this;
         GameObject gameModeRef = Instantiate(gameModePrefab);
         currentGameMode = (GameMode)gameModeRef.AddComponent(typeof(GameMode));

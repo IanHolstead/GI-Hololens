@@ -25,6 +25,7 @@ public class MyPlayerController : PlayerController
     // Update is called once per frame
     void Update()
     {
+        //TODO: All controllers have local player authority so its getting a bunch of gamepads
         if (registerGamePad.Enter() && localPlayerAuthority)
         {
             Logger.Log("Controller " + ID);

@@ -15,7 +15,7 @@ namespace GI {
 
         // Use this for initialization
         void Awake() {
-            
+            Logger.Log("ControllerManagerAwake");
         }
 
         // Update is called once per frame

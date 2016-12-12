@@ -117,7 +117,7 @@ namespace HoloToolkit.Unity
         {
             Stream stream = null;
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && UNITY_WSA
             Task<Task> task = Task<Task>.Factory.StartNew(
                             async () =>
                             {
@@ -144,7 +144,7 @@ namespace HoloToolkit.Unity
         {
             Stream stream = null;
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && UNITY_WSA
             Task<Task> task = Task<Task>.Factory.StartNew(
                             async () =>
                             {
