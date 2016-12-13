@@ -31,7 +31,7 @@ namespace UnityEngine.Networking
                 return;
             }
 #else
-            if (!serverStarted && GI.GestureManager.Instance.TapEvent)
+            if (!serverStarted && HoloToolkit.Unity.GestureManager.Instance.TapEvent)
             {
                 serverStarted = true;
                 manager.StartClient();

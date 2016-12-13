@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.VR.WSA.Input;
-using GI;
+using HoloToolkit.Unity;
 
 public class BounceLauncher : MonoBehaviour { 
 
@@ -30,7 +30,7 @@ public class BounceLauncher : MonoBehaviour {
     void LateUpdate ()
     {
         timeSinceLastShot += Time.deltaTime;
-        GI.HandsManager handManager = GI.HandsManager.Instance;
+        HandsManager handManager = HandsManager.Instance;
         if (handManager.NumberOfTrackedHands == 1)
         {
             if (currentHandID == null || !handManager.IsHandTracked(currentHandID.Value))
@@ -43,7 +43,7 @@ public class BounceLauncher : MonoBehaviour {
 
             sphereRef.transform.position = handManager.GetHandLocation(currentHandID.Value);
 
-            if (GI.GestureManager.Instance.TapEvent)
+            if (GestureManager.Instance.TapEvent)
             {
                 LaunchBall(sphereRef.transform.position);
             }

@@ -149,7 +149,7 @@ namespace HoloToolkit.Unity
         {
             if (ObserverState != ObserverStates.Running)
             {
-                Debug.Log("Starting the observer.");
+                Logger.Log("Starting the observer.");
                 ObserverState = ObserverStates.Running;
 
                 // We want the first update immediately.

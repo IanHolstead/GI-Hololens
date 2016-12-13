@@ -26,13 +26,13 @@ public class MyPlayerController : PlayerController
     void Update()
     {
         //TODO: All controllers have local player authority so its getting a bunch of gamepads
-        if (registerGamePad.Enter() && localPlayerAuthority)
+        if (registerGamePad.Enter() && isLocalPlayer)
         {
             Logger.Log("Controller " + ID);
             controller = GI.ControllerManager.Instance.RequestGamepad();
         }
 
-        if (localPlayerAuthority)
+        if (isLocalPlayer)
         {
             xAxis = controller.Stick.Left.X;
             yAxis = controller.Stick.Left.Y;

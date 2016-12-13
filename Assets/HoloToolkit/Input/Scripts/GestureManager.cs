@@ -48,7 +48,7 @@ namespace HoloToolkit.Unity
         /// If its null, then the gazed at object will be selected.
         /// </summary>
         public GameObject OverrideFocusedObject { get; set; }
-        
+
         /// <summary>
         /// Gets the currently focused object, or null if none.
         /// </summary>
@@ -88,8 +88,17 @@ namespace HoloToolkit.Unity
 
         private bool HandPressed { get { return pressedHands.Count > 0; } }
         private HashSet<uint> pressedHands = new HashSet<uint>();
+        public bool blockTapEvents = false;
 
         private InteractionSourceState currentHandState;
+ 
+        private bool tapEvent = false;
+        private bool clearTapEvent = false;
+        [HideInInspector]
+        public bool TapEvent
+        {
+            get { return tapEvent; }
+        }
 
         void Start()
         {
@@ -97,7 +106,7 @@ namespace HoloToolkit.Unity
             InteractionManager.SourceReleased += InteractionManager_SourceReleased;
             InteractionManager.SourceUpdated += InteractionManager_SourceUpdated;
             InteractionManager.SourceLost += InteractionManager_SourceLost;
-
+            
             // Create a new GestureRecognizer. Sign up for tapped events.
             gestureRecognizer = new GestureRecognizer();
             gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap);
@@ -154,7 +163,7 @@ namespace HoloToolkit.Unity
 
         private void OnTap()
         {
-            if (FocusedObject != null)
+            if (!blockTapEvents && FocusedObject != null)
             {
                 FocusedObject.SendMessage("OnSelect");
             }
@@ -204,6 +213,16 @@ namespace HoloToolkit.Unity
 
         void LateUpdate()
         {
+            if (clearTapEvent)
+            {
+                tapEvent = false;
+                clearTapEvent = false;
+            }
+            if (tapEvent)
+            {
+                clearTapEvent = true;
+            }
+
             GameObject oldFocusedObject = FocusedObject;
 
             if (GazeManager.Instance.Hit &&

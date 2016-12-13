@@ -9,20 +9,20 @@ namespace HoloToolkit.Unity
     {
         [Tooltip("The room model to use when loading meshes in Unity.")]
         public GameObject roomModel;
+        
+//        // Use this for initialization.
+//        private void Start()
+//        {
+//#if UNITY_EDITOR
+//            // When in the Unity editor, try loading saved meshes from a model.
+//            Load(roomModel);
 
-        // Use this for initialization.
-        private void Start()
-        {
-#if UNITY_EDITOR
-            // When in the Unity editor, try loading saved meshes from a model.
-            Load(roomModel);
-
-            if (GetMeshFilters().Count > 0)
-            {
-                SpatialMappingManager.Instance.SetSpatialMappingSource(this);
-            }
-#endif
-        }
+//            if (GetMeshFilters().Count > 0)
+//            {
+//                SpatialMappingManager.Instance.SetSpatialMappingSource(this);
+//            }
+//#endif
+//        }
 
         /// <summary>
         /// Loads the SpatialMapping mesh from the specified room object.
@@ -68,7 +68,7 @@ namespace HoloToolkit.Unity
                 }
             }
             catch
-            {
+            { 
                 Debug.Log("Failed to load object " + roomModel.name);
             }
             finally

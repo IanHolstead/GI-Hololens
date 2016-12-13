@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.VR.WSA.Input;
+using HoloToolkit.Unity;
 
 namespace GI {
     public class Movable : MonoBehaviour {
