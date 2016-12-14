@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.VR.WSA.Input;
 using HoloToolkit.Unity;
 
 public class BounceLauncher : MonoBehaviour { 
@@ -15,18 +13,17 @@ public class BounceLauncher : MonoBehaviour {
     private float timeSinceLastShot = 0f;
     private uint? currentHandID = null;
 
-    void Start () {
+    void Start ()
+    {
+
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Logger.Log("Press");
-        }
+
     }
 
-    // Update is called once per frame
+#if UNITY_EDITOR || UNITY_WSA
     void LateUpdate ()
     {
         timeSinceLastShot += Time.deltaTime;
@@ -70,6 +67,7 @@ public class BounceLauncher : MonoBehaviour {
             sphereRef.SetActive(false);
         }
     }
+#endif
 
     void LaunchBall(Vector3 hand)
     {
