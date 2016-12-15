@@ -4,9 +4,11 @@
 using UnityEngine;
 using System.Collections;
 using System;
+#if UNITY_EDITOR || UNITY_WSA
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using UnityEngine.VR.WSA;
+#endif
 
 namespace HoloToolkit.Unity
 {
@@ -44,12 +46,13 @@ namespace HoloToolkit.Unity
         }
 
         protected override Material RenderMaterial { get { return MeshMaterial; } }
-        
+
         /// <summary>
         /// World anchor used by the custom mesh
         /// </summary>
+#if UNITY_EDITOR || UNITY_WSA
         public WorldAnchor LocalWorldAnchor { get; private set; }
-
+#endif
         // Privates
         private bool drawProcessedMesh = true;
         private bool isImportActive = false;
@@ -61,6 +64,7 @@ namespace HoloToolkit.Unity
         /// Imports the custom mesh from the dll. This a a coroutine which will take multiple frames to complete.
         /// </summary>
         /// <returns></returns>
+#if UNITY_EDITOR || UNITY_WSA
         public IEnumerator Import_UnderstandingMesh()
         {
             if (!SpatialUnderstanding.Instance.AllowSpatialUnderstanding)
@@ -177,6 +181,7 @@ namespace HoloToolkit.Unity
         {
             Update_MeshImport(Time.deltaTime);
         }
+#endif
     }
 
 }

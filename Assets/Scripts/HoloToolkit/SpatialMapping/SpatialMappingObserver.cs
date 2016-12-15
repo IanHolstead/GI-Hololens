@@ -3,7 +3,9 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR || UNITY_WSA
 using UnityEngine.VR.WSA;
+#endif
 
 namespace HoloToolkit.Unity
 {
@@ -38,6 +40,7 @@ namespace HoloToolkit.Unity
         [Tooltip("How long to wait (in sec) between Spatial Mapping updates.")]
         public float TimeBetweenUpdates = 3.5f;
 
+#if UNITY_EDITOR || UNITY_WSA
         /// <summary>
         /// Event for hooking when surfaces are changed.
         /// </summary>
@@ -342,5 +345,6 @@ namespace HoloToolkit.Unity
             // Clear our surface mesh collection.
             surfaces.Clear();
         }
+#endif
     }
 }

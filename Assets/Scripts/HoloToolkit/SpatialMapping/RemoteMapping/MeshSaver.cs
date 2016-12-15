@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && UNITY_WSA
 using System.Threading.Tasks;
 using Windows.Storage;
 #endif
@@ -30,7 +30,7 @@ namespace HoloToolkit.Unity
         {
             get
             {
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && UNITY_WSA
                 return ApplicationData.Current.RoamingFolder.Path;
 #else
                 return Application.persistentDataPath;

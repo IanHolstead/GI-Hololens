@@ -6,15 +6,19 @@ using HoloToolkit.Unity;
 
 public class Movable : MonoBehaviour
 {
-#if UNITY_EDITOR || UNITY_WSA
+    private bool useManualMove = false;
+    private Vector3 manualLocation;
+
     private Vector3 lastHandLocation = new Vector3();
     private uint? currentHandID = null;
+#if UNITY_EDITOR || UNITY_WSA
     private GestureRecognizer gestureRecognizer;
-
+#endif
     public GameObject cameraRef;
 
     void Start()
     {
+#if UNITY_EDITOR || UNITY_WSA
         // Create a new GestureRecognizer. Sign up for tapped events.
         gestureRecognizer = new GestureRecognizer();
 
@@ -25,15 +29,30 @@ public class Movable : MonoBehaviour
 
         // Start looking for gestures.
         gestureRecognizer.StartCapturingGestures();
+#endif
     }
 
     void Update()
     {
-        if (currentHandID != null)
+        if (currentHandID != null || useManualMove)
         {
             if (lastHandLocation != Vector3.zero)
             {
-                Vector3 currentHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
+
+                Vector3 currentHandLocation;
+                if (!useManualMove)
+                {
+#if UNITY_EDITOR || UNITY_WSA
+                    currentHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
+#else
+                    Debug.LogError("Tried to move object with hand outside hololens");
+                    return;
+#endif
+                }
+                else
+                {
+                    currentHandLocation = manualLocation;
+                }
 
                 //normalize about camera
                 currentHandLocation -= cameraRef.transform.position;
@@ -45,12 +64,11 @@ public class Movable : MonoBehaviour
                     return;
                 }
 
-
                 float angle = Vector3.Angle(lastHandLocation, currentHandLocation);
 
                 transform.RotateAround(cameraRef.transform.position, Vector3.Cross(lastHandLocation, currentHandLocation), angle);
 
-                //TODO: This doesn't work...
+                //TODO: I don't think this works...
                 //lock axis 
                 transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 
@@ -58,11 +76,15 @@ public class Movable : MonoBehaviour
             }
             else
             {
+#if UNITY_EDITOR || UNITY_WSA
                 transform.rotation = Quaternion.LookRotation(HandsManager.Instance.GetHandLocation(currentHandID.Value) - cameraRef.transform.position);
+#endif
             }
-
+#if UNITY_EDITOR || UNITY_WSA
             lastHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
-
+#else
+            lastHandLocation = manualLocation;
+#endif
         }
         else
         {
@@ -70,6 +92,18 @@ public class Movable : MonoBehaviour
         }
     }
 
+    public void StopManualMove()
+    {
+        manualLocation = Vector3.zero;
+        useManualMove = false;
+    }
+
+    public void ManualMovement(Vector3 position)
+    {
+        manualLocation = position;
+        useManualMove = true;
+    }
+#if UNITY_EDITOR || UNITY_WSA
     public void StartMoving(uint? handID = null)
     {
         if (handID == null || !HandsManager.Instance.IsHandTracked(handID.Value))

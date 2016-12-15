@@ -2,7 +2,9 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
+#if UNITY_EDITOR || UNITY_WSA
 using UnityEngine.VR.WSA.Input;
+#endif
 using System.Collections.Generic;
 
 namespace HoloToolkit.Unity
@@ -80,6 +82,7 @@ namespace HoloToolkit.Unity
             }
         }
 
+#if UNITY_EDITOR || UNITY_WSA
         private GestureRecognizer gestureRecognizer;
         // We use a separate manipulation recognizer here because the tap gesture recognizer cancels
         // capturing gestures whenever the GazeManager focus changes, which is not the behavior
@@ -165,6 +168,7 @@ namespace HoloToolkit.Unity
         {
             if (!blockTapEvents && FocusedObject != null)
             {
+                tapEvent = true;
                 FocusedObject.SendMessage("OnSelect");
             }
         }
@@ -271,5 +275,6 @@ namespace HoloToolkit.Unity
             InteractionManager.SourceUpdated -= InteractionManager_SourceUpdated;
             InteractionManager.SourceLost -= InteractionManager_SourceLost;
         }
+#endif
     }
 }

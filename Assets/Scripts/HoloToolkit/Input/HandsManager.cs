@@ -2,7 +2,9 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System.Collections.Generic;
+#if UNITY_EDITOR || UNITY_WSA
 using UnityEngine.VR.WSA.Input;
+#endif
 
 namespace HoloToolkit.Unity
 {
@@ -11,6 +13,7 @@ namespace HoloToolkit.Unity
     /// </summary>
     public partial class HandsManager : Singleton<HandsManager>
     {
+#if UNITY_EDITOR || UNITY_WSA
         /// <summary>
         /// HandDetected tracks the hand detected state.
         /// Returns true if the list of tracked hands is not empty.
@@ -26,7 +29,6 @@ namespace HoloToolkit.Unity
         {
             get { return trackedHands.Count; }
         }
-
         private Dictionary<uint, InteractionSourceState> trackedHands = new Dictionary<uint, InteractionSourceState>();
 
         void Awake()
@@ -100,7 +102,7 @@ namespace HoloToolkit.Unity
             }
             if (state == null)
             {
-                //this feels a little gross
+                //TODO: this feels a little gross
                 return uint.MaxValue;
             }
             return state.Value.source.id;
@@ -119,7 +121,11 @@ namespace HoloToolkit.Unity
 
             return location;
         }
-
+        /// <summary>
+        /// Checks if a hand with the correct hand ID is currently being tracked
+        /// </summary>
+        /// <param name="handID"></param>
+        /// <returns></returns>
         public bool IsHandTracked(uint handID)
         {
             if (!trackedHands.ContainsKey(handID))
@@ -145,5 +151,6 @@ namespace HoloToolkit.Unity
             InteractionManager.SourceUpdated -= InteractionManager_SourceUpdated;
             InteractionManager.SourceLost -= InteractionManager_SourceLost;
         }
+#endif
     }
 }

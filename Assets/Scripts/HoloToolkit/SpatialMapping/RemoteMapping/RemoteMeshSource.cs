@@ -4,13 +4,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && UNITY_WSA
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 using Windows.Networking;
 using Windows.Foundation;
 #endif
 
+//TODO: the code from this should be moved to a new class that uses the HLAPI to do the transmission
 namespace HoloToolkit.Unity
 {
     /// <summary>
@@ -24,7 +25,7 @@ namespace HoloToolkit.Unity
         [Tooltip("The connection port on the machine to use.")]
         public int ConnectionPort = 11000;
 
-#if !UNITY_EDITOR 
+#if !UNITY_EDITOR && UNITY_WSA
         /// <summary>
         /// Tracks the network connection to the remote machine we are sending meshes to.
         /// </summary>

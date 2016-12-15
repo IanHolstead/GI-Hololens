@@ -6,7 +6,9 @@ using System.Collections;
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+#if UNITY_EDITOR || UNITY_WSA
 using UnityEngine.VR.WSA;
+#endif
 
 namespace HoloToolkit.Unity
 {
@@ -18,6 +20,7 @@ namespace HoloToolkit.Unity
     /// </summary>
     public class SpatialUnderstandingSourceMesh : MonoBehaviour
     {
+#if UNITY_EDITOR || UNITY_WSA
         // Privates
         /// <summary>
         /// Internal list of meshes that is passed to the dll. This is
@@ -195,5 +198,6 @@ namespace HoloToolkit.Unity
 
             return true;
         }
+#endif
     }
 }

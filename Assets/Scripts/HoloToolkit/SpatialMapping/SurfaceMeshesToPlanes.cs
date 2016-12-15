@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && UNITY_WSA
 using System.Threading;
 using System.Threading.Tasks;
-#else
+#elif UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace HoloToolkit.Unity
-{
+{ 
     /// <summary>
     /// SurfaceMeshesToPlanes will find and create planes based on the meshes returned by the SpatialMappingManager's Observer.
     /// </summary>
@@ -183,7 +183,7 @@ namespace HoloToolkit.Unity
             // Pause our work, and continue on the next frame.
             yield return null;
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && UNITY_WSA
             // When not in the unity editor we can use a cool background task to help manage FindPlanes().
             Task<BoundedPlane[]> planeTask = Task.Run(() => PlaneFinding.FindPlanes(meshData, snapToGravityThreshold, MinArea));
         
