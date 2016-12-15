@@ -8,6 +8,14 @@ public class LogMessage {
 
     private LogLevel level;
 
+    public LogLevel Level
+    {
+        get
+        {
+            return level;
+        }
+    }
+
     public LogMessage(string logMessage) : this(logMessage, null, LogLevel.Warning) { }
     
     public LogMessage(object logMessage, LogLevel level) : this(logMessage, null, level) { }
@@ -25,5 +33,10 @@ public class LogMessage {
     public override string ToString()
     {
         return logMessage;
+    }
+
+    public string GetLogMessage(bool showLogTime = false, bool showCallingMethod = false)
+    {
+        return logMessage + (showLogTime ? ", " + logTime : string.Empty) + (showCallingMethod ? ", " + callingMethod : string.Empty);
     }
 }

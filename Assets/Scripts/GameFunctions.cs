@@ -13,6 +13,7 @@
         }
     }
 
+    //TODO: Remove? This is a horrible way to do this but its nice and easy for testing
     public class DoOnce
     {
         bool closed;

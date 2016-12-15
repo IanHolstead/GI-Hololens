@@ -2,14 +2,14 @@
 #if UNITY_EDITOR || UNITY_WSA
 using UnityEngine.VR.WSA.Input;
 using HoloToolkit.Unity;
+#endif
 
 public class Movable : MonoBehaviour
 {
-
+#if UNITY_EDITOR || UNITY_WSA
     private Vector3 lastHandLocation = new Vector3();
     private uint? currentHandID = null;
     private GestureRecognizer gestureRecognizer;
-    //private float time;
 
     public GameObject cameraRef;
 
@@ -17,13 +17,10 @@ public class Movable : MonoBehaviour
     {
         // Create a new GestureRecognizer. Sign up for tapped events.
         gestureRecognizer = new GestureRecognizer();
-        //gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.Hold | GestureSettings.DoubleTap | GestureSettings.ManipulationTranslate);
+
         gestureRecognizer.SetRecognizableGestures(GestureSettings.ManipulationTranslate);
-        //gestureRecognizer.TappedEvent += OnTappedEvent;
-        //gestureRecognizer.HoldStartedEvent += OnHoldStartedEvent;
+
         gestureRecognizer.ManipulationStartedEvent += OnManipulationStartedEvent;
-        //gestureRecognizer.RecognitionStartedEvent += OnRecognitionStartedEvent;
-        //gestureRecognizer.ManipulationUpdatedEvent += OnManipulationUpdatedEvent;
         gestureRecognizer.ManipulationCompletedEvent += OnManipulationEndedEvent;
 
         // Start looking for gestures.
@@ -32,8 +29,6 @@ public class Movable : MonoBehaviour
 
     void Update()
     {
-        //time += Time.deltaTime;
-
         if (currentHandID != null)
         {
             if (lastHandLocation != Vector3.zero)
@@ -54,21 +49,19 @@ public class Movable : MonoBehaviour
                 float angle = Vector3.Angle(lastHandLocation, currentHandLocation);
 
                 transform.RotateAround(cameraRef.transform.position, Vector3.Cross(lastHandLocation, currentHandLocation), angle);
-                //transform.RotateAround(cameraRef.transform.position, Vector3.up, angle);
-                //lock axis
+
+                //TODO: This doesn't work...
+                //lock axis 
                 transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
 
                 transform.position = transform.position * Vector3.Project(currentHandLocation, lastHandLocation).magnitude / lastHandLocation.magnitude;
-                //transform.position = transform.position * currentHandLocation.magnitude / lastHandLocation.magnitude;
-
-                Debug.Log(currentHandLocation.magnitude / lastHandLocation.magnitude);
             }
             else
             {
                 transform.rotation = Quaternion.LookRotation(HandsManager.Instance.GetHandLocation(currentHandID.Value) - cameraRef.transform.position);
             }
 
-            lastHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);// - cameraRef.transform.position;
+            lastHandLocation = HandsManager.Instance.GetHandLocation(currentHandID.Value);
 
         }
         else
@@ -100,11 +93,6 @@ public class Movable : MonoBehaviour
         return false;
     }
 
-    //void OnTappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
-    //{
-    //    Logger.Log("OnTap + " + tapCount);
-    //}
-
     void OnManipulationStartedEvent(InteractionSourceKind source, Vector3 translation, Ray headRay)
     {
         Logger.Log("Manipulation Started");
@@ -114,26 +102,10 @@ public class Movable : MonoBehaviour
         }
     }
 
-    //void OnManipulationUpdatedEvent(InteractionSourceKind source, Vector3 translation, Ray headRay)
-    //{
-    //    //Logger.Log("OnManipulation " + translation);
-    //}
-
     void OnManipulationEndedEvent(InteractionSourceKind source, Vector3 translation, Ray headRay)
     {
         Logger.Log("Manipulation Ended");
         FinishMoving();
     }
-
-    //void OnHoldStartedEvent(InteractionSourceKind source, Ray headRay)
-    //{
-    //    //Logger.Log("OnHold " + time);
-    //}
-
-    //void OnRecognitionStartedEvent(InteractionSourceKind source, Ray headRay)
-    //{
-    //    //Logger.Log("OnRecognition");
-    //    time = 0f;
-    //}
-}
 #endif
+}

@@ -11,11 +11,20 @@ public static class Logger
     public static InGamePanel inGameLogConsole = UnityEngine.Object.FindObjectOfType<InGamePanel>();
 
     static LinkedList<LogMessage> log = new LinkedList<LogMessage>();
-    
-    private static LinkedList<KeyValuePair<DateTime, LinkedListNode<LogMessage>>> toBeRemoved = new LinkedList<KeyValuePair<DateTime, LinkedListNode<LogMessage>>>();
-    
 
-    public static void Log(object toPrint, object callingClass = null, LogLevel logLevel = LogLevel.Warning, float duration = 0)
+    public static LogLevel CurrentLogLevel
+    {
+        get
+        {
+            return currentLogLevel;
+        }
+    }
+
+    //TODO: the idea behind this was to make it like unreals logs where entries vanish after time
+    //TODO: This needs to be a priority Queue if its going to work.
+    //private static LinkedList<KeyValuePair<float, LinkedListNode<LogMessage>>> toBeRemoved = new LinkedList<KeyValuePair<float, LinkedListNode<LogMessage>>>();
+
+    public static void Log(object toPrint, object callingClass = null, LogLevel logLevel = LogLevel.Warning)//, float duration = 0)
     {
 
         if (currentLogLevel != LogLevel.None && currentLogLevel >= logLevel)
@@ -27,11 +36,10 @@ public static class Logger
             else if (useInGameLogger && inGameLogConsole != null)
             {
                 log.AddLast(new LogMessage(toPrint, callingClass != null ? callingClass.ToString() : "", logLevel));
-                if (duration > 0)
-                {
-                    
-                    //DateTime.Now.se;
-                }
+                //if (duration > 0)
+                //{
+                //    //toBeRemoved.a UnityEngine.Time.time
+                //}
                 inGameLogConsole.UpdateLog(log);
             }
 

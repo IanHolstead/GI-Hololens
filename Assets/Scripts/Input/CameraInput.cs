@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR || UNITY_WSA
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VR.WSA.WebCam;
 using System.Linq;
@@ -63,3 +64,4 @@ public class CameraInput : MonoBehaviour {
         photoCaptureObject.StopPhotoModeAsync(OnStoppedPhotoMode);
     }
 }
+#endif
