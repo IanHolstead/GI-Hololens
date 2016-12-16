@@ -55,6 +55,7 @@ public class InGamePanel : MonoBehaviour {
             }
             logText += messages.Count - linesPrinted +" " + currentNode.Value.ToString() + "\n";
             currentNode = currentNode.Previous;
+            linesPrinted++;
         }
 
         GetComponentInChildren<UnityEngine.UI.Text>().text = logText;
