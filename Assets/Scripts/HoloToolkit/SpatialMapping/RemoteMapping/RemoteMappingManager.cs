@@ -88,7 +88,7 @@ namespace HoloToolkit.Unity
         /// </summary>
         private void SendMeshes()
         {
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && UNITY_WSA
             List<MeshFilter> MeshFilters = SpatialMappingManager.Instance.GetMeshFilters();
             for (int index = 0; index < MeshFilters.Count; index++)
             {

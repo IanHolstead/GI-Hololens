@@ -18,6 +18,7 @@ namespace HoloToolkit.Unity
     /// </summary>
     public class SpatialUnderstandingDll
     {
+#if UNITY_EDITOR || UNITY_WSA
         /// <summary>
         /// Representation of the mesh data to be passed to the understanding dll.
         /// Used by SpatialUnderstandingSourceMesh to store local copies of the mesh data.
@@ -355,26 +356,26 @@ namespace HoloToolkit.Unity
             /// before any other dll function.
             /// </summary>
             /// <returns>Zero if fails, one if success</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern int SpatialUnderstanding_Init();
-#else
-            public static int SpatialUnderstanding_Init()
-            {
-                return 0;
-            }
-#endif
+//#else
+//            public static int SpatialUnderstanding_Init()
+//            {
+//                return 0;
+//            }
+//#endif
             /// <summary>
             /// Terminate the spatial understanding dll. 
             /// </summary>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern void SpatialUnderstanding_Term();
-#else
-            public static void SpatialUnderstanding_Term()
-            {
-            }
-#endif
+//#else
+//            public static void SpatialUnderstanding_Term()
+//            {
+//            }
+//#endif
 
             /// <summary>
             /// Initialize the scanning process.
@@ -390,22 +391,22 @@ namespace HoloToolkit.Unity
             /// <param name="camUp_Z">The user's camera/view unit up vector, z value</param>
             /// <param name="searchDst">Suggested search distance for playspace center</param>
             /// <param name="optimalSize">Optimal room size. Used to determind the playspace size</param>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern void GeneratePlayspace_InitScan(
                 [In] float camPos_X, [In] float camPos_Y, [In] float camPos_Z,
                 [In] float camFwd_X, [In] float camFwd_Y, [In] float camFwd_Z,
                 [In] float camUp_X, [In] float camUp_Y, [In] float camUp_Z,
                 [In] float searchDst, [In] float optimalSize);
-#else
-            public static void GeneratePlayspace_InitScan(
-                [In] float camPos_X, [In] float camPos_Y, [In] float camPos_Z,
-                [In] float camFwd_X, [In] float camFwd_Y, [In] float camFwd_Z,
-                [In] float camUp_X, [In] float camUp_Y, [In] float camUp_Z,
-                [In] float searchDst, [In] float optimalSize)
-            {
-            }
-#endif
+//#else
+//            public static void GeneratePlayspace_InitScan(
+//                [In] float camPos_X, [In] float camPos_Y, [In] float camPos_Z,
+//                [In] float camFwd_X, [In] float camFwd_Y, [In] float camFwd_Z,
+//                [In] float camUp_X, [In] float camUp_Y, [In] float camUp_Z,
+//                [In] float searchDst, [In] float optimalSize)
+//            {
+//            }
+//#endif
 
             /// <summary>
             /// Update the playspace scanning. Should be called once per frame during scanning.
@@ -423,7 +424,7 @@ namespace HoloToolkit.Unity
             /// <param name="camUp_Z">The user's camera/view unit up vector, z value</param>
             /// <param name="deltaTime">Time since last update</param>
             /// <returns>One if scanning has been finalized, zero if more updates are required.</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern int GeneratePlayspace_UpdateScan(
                 [In] int meshCount, [In] IntPtr meshes,
@@ -431,31 +432,31 @@ namespace HoloToolkit.Unity
                 [In] float camFwd_X, [In] float camFwd_Y, [In] float camFwd_Z,
                 [In] float camUp_X, [In] float camUp_Y, [In] float camUp_Z,
                 [In] float deltaTime);
-#else
-            public static int GeneratePlayspace_UpdateScan(
-                [In] int meshCount, [In] IntPtr meshes,
-                [In] float camPos_X, [In] float camPos_Y, [In] float camPos_Z,
-                [In] float camFwd_X, [In] float camFwd_Y, [In] float camFwd_Z,
-                [In] float camUp_X, [In] float camUp_Y, [In] float camUp_Z,
-                [In] float deltaTime)
-            {
-                return 0;
-            }
-#endif
+//#else
+//            public static int GeneratePlayspace_UpdateScan(
+//                [In] int meshCount, [In] IntPtr meshes,
+//                [In] float camPos_X, [In] float camPos_Y, [In] float camPos_Z,
+//                [In] float camFwd_X, [In] float camFwd_Y, [In] float camFwd_Z,
+//                [In] float camUp_X, [In] float camUp_Y, [In] float camUp_Z,
+//                [In] float deltaTime)
+//            {
+//                return 0;
+//            }
+//#endif
 
             /// <summary>
             /// Request scanning that the scanning phase be ended and the playspace
             /// finalized. This should be called once the user is happy with the currently
             /// scanned in playspace.
             /// </summary>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern void GeneratePlayspace_RequestFinish();
-#else
-            public static void GeneratePlayspace_RequestFinish()
-            {
-            }
-#endif
+//#else
+//            public static void GeneratePlayspace_RequestFinish()
+//            {
+//            }
+//#endif
 
             /// <summary>
             /// Extracting the mesh is a two step process, the first generates the mesh for extraction & saves it off.
@@ -466,21 +467,21 @@ namespace HoloToolkit.Unity
             /// <param name="vertexCount">Filled in with the number of vertices to be returned in the subsequent extract call</param>
             /// <param name="indexCount">Filled in with the number of indices to be returned in the subsequent extract call</param>
             /// <returns>Zero if fails, one if success</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern int GeneratePlayspace_ExtractMesh_Setup(
                 [Out] out int vertexCount,
                 [Out] out int indexCount);
-#else
-            public static int GeneratePlayspace_ExtractMesh_Setup(
-                [Out] out int vertexCount,
-                [Out] out int indexCount)
-            {
-                vertexCount = 0;
-                indexCount = 0;
-                return 0;
-            }
-#endif
+//#else
+//            public static int GeneratePlayspace_ExtractMesh_Setup(
+//                [Out] out int vertexCount,
+//                [Out] out int indexCount)
+//            {
+//                vertexCount = 0;
+//                indexCount = 0;
+//                return 0;
+//            }
+//#endif
 
             /// <summary>
             /// Call to receive the dll's custom generated mesh data. Use GeneratePlayspace_ExtractMesh_Setup to
@@ -492,7 +493,7 @@ namespace HoloToolkit.Unity
             /// <param name="bufferIndexCount">Size of indices, in number of elements</param>
             /// <param name="indices">Array to receive the mesh indices</param>
             /// <returns>Zero if fails, one if success</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern int GeneratePlayspace_ExtractMesh_Extract(
                 [In] int bufferVertexCount,
@@ -500,51 +501,51 @@ namespace HoloToolkit.Unity
                 [In] IntPtr verticesNormal,     // (vertexCount) DirectX::XMFLOAT3*
                 [In] int bufferIndexCount,
                 [In] IntPtr indices);           // (indexCount) INT32*
-#else
-            public static int GeneratePlayspace_ExtractMesh_Extract(
-                [In] int bufferVertexCount,
-                [In] IntPtr verticesPos,        // (vertexCount) DirectX::XMFLOAT3*
-                [In] IntPtr verticesNormal,     // (vertexCount) DirectX::XMFLOAT3*
-                [In] int bufferIndexCount,
-                [In] IntPtr indices)            // (indexCount) INT32*
-            {
-                return 0;
-            }
-#endif
+//#else
+//            public static int GeneratePlayspace_ExtractMesh_Extract(
+//                [In] int bufferVertexCount,
+//                [In] IntPtr verticesPos,        // (vertexCount) DirectX::XMFLOAT3*
+//                [In] IntPtr verticesNormal,     // (vertexCount) DirectX::XMFLOAT3*
+//                [In] int bufferIndexCount,
+//                [In] IntPtr indices)            // (indexCount) INT32*
+//            {
+//                return 0;
+//            }
+//#endif
 
             /// <summary>
             /// Query the playspace scan statistics. 
             /// </summary>
             /// <param name="playspaceStats">playspace stats structure to receive the statistics data</param>
             /// <returns>Zero if fails, one if success</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern int QueryPlayspaceStats(
                 [In] IntPtr playspaceStats);    // PlayspaceStats
-#else
-            public static int QueryPlayspaceStats(
-                [In] IntPtr playspaceStats)
-            {
-                return 0;
-            }
-#endif
+//#else
+//            public static int QueryPlayspaceStats(
+//                [In] IntPtr playspaceStats)
+//            {
+//                return 0;
+//            }
+//#endif
 
             /// <summary>
             /// Query the playspace alignment data. This will not be valid until after scanning is finalized.
             /// </summary>
             /// <param name="playspaceAlignment">playspace alignment structure to receive the alignment data</param>
             /// <returns>Zero if fails, one if success</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern int QueryPlayspaceAlignment(
                 [In] IntPtr playspaceAlignment); // PlayspaceAlignment
-#else
-            public static int QueryPlayspaceAlignment(
-                [In] IntPtr playspaceAlignment)
-            {
-                return 0;
-            }
-#endif
+//#else
+//            public static int QueryPlayspaceAlignment(
+//                [In] IntPtr playspaceAlignment)
+//            {
+//                return 0;
+//            }
+//#endif
 
             /// <summary>
             /// Perform a raycast against the internal world representation of the understanding dll. 
@@ -558,21 +559,22 @@ namespace HoloToolkit.Unity
             /// <param name="rayVec_Z">Ray direction vector, z component. Length of ray indicates the length of the ray cast query.</param>
             /// <param name="result">Structure to receive the results of the raycast</param>
             /// <returns>Zero if fails or no intersection, one if an intersection is detected</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+//#if UNITY_METRO && !UNITY_EDITOR
             [DllImport("SpatialUnderstanding")]
             public static extern int PlayspaceRaycast(
                 [In] float rayPos_X, [In] float rayPos_Y, [In] float rayPos_Z,
                 [In] float rayVec_X, [In] float rayVec_Y, [In] float rayVec_Z,
                 [In] IntPtr result);            // RaycastResult
-#else
-            public static int PlayspaceRaycast(
-                [In] float rayPos_X, [In] float rayPos_Y, [In] float rayPos_Z,
-                [In] float rayVec_X, [In] float rayVec_Y, [In] float rayVec_Z,
-                [In] IntPtr result)
-            {
-                return 0;
-            }
-#endif
+//#else
+//            public static int PlayspaceRaycast(
+//                [In] float rayPos_X, [In] float rayPos_Y, [In] float rayPos_Z,
+//                [In] float rayVec_X, [In] float rayVec_Y, [In] float rayVec_Z,
+//                [In] IntPtr result)
+//            {
+//                return 0;
+//            }
+//#endif
         }
+#endif
     }
 }

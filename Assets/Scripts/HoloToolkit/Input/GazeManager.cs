@@ -2,7 +2,6 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
-using UnityEngine.VR.WSA;
 
 namespace HoloToolkit.Unity
 {
@@ -60,7 +59,9 @@ namespace HoloToolkit.Unity
             gazeDirection = Camera.main.transform.forward;
 
             UpdateRaycast();
+#if UNITY_EDITOR || UNITY_WSA
             UpdateStabilizationPlane();
+#endif
         }
 
         /// <summary>
@@ -111,6 +112,7 @@ namespace HoloToolkit.Unity
             }
         }
 
+#if UNITY_EDITOR || UNITY_WSA
         /// <summary>
         /// Adds the stabilization plane modifier if it's enabled and if it doesn't exist yet.
         /// </summary>
@@ -132,5 +134,6 @@ namespace HoloToolkit.Unity
                 StabilizationPlaneModifier.Instance.SetStabilizationPlane = SetStabilizationPlane;
             }
         }
+#endif
     }
 }

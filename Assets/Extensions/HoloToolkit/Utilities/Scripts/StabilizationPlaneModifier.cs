@@ -2,7 +2,9 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
+#if UNITY_EDITOR || UNITY_WSA
 using UnityEngine.VR.WSA;
+#endif
 
 namespace HoloToolkit.Unity
 {
@@ -11,6 +13,7 @@ namespace HoloToolkit.Unity
     /// </summary>
     public class StabilizationPlaneModifier : Singleton<StabilizationPlaneModifier>
     {
+#if UNITY_EDITOR || UNITY_WSA
         [Tooltip("Checking enables SetFocusPointForFrame to set the stabilization plane.")]
         public bool SetStabilizationPlane = true;
         [Tooltip("Lerp speed when moving focus point closer.")]
@@ -200,5 +203,6 @@ namespace HoloToolkit.Unity
                 Gizmos.DrawCube(Vector3.zero, Vector3.one);
             }
         }
+#endif
     }
 }

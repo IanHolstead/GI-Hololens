@@ -21,6 +21,7 @@ namespace HoloToolkit.Unity
     /// </remarks>
     public class GestureManipulator : MonoBehaviour
     {
+#if UNITY_EDITOR || UNITY_WSA
         [Tooltip("How much to scale each axis of hand movement (camera relative) when manipulating the object")]
         public Vector3 handPositionScale = new Vector3(2.0f, 2.0f, 4.0f);  // Default tuning values, expected to be modified per application
 
@@ -113,5 +114,6 @@ namespace HoloToolkit.Unity
                 }
             }
         }
+#endif
     }
 }

@@ -186,7 +186,7 @@ namespace HoloToolkit.Unity
         /// </summary>
         public void StartObserver()
         {
-//#if !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
             Logger.Log("Starting");
             if (!IsObserverRunning())
             {
@@ -194,7 +194,7 @@ namespace HoloToolkit.Unity
                 surfaceObserver.StartObserving();
                 StartTime = Time.time;
             }
-//#endif
+#endif
         }
 
         /// <summary>
@@ -202,12 +202,12 @@ namespace HoloToolkit.Unity
         /// </summary>
         public void StopObserver()
         {
-//#if !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
             if (IsObserverRunning())
             {
                 surfaceObserver.StopObserving();
             }
-//#endif
+#endif
         }
 
         /// <summary>

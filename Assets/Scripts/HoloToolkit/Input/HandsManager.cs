@@ -31,6 +31,25 @@ namespace HoloToolkit.Unity
         }
         private Dictionary<uint, InteractionSourceState> trackedHands = new Dictionary<uint, InteractionSourceState>();
 
+#else
+        /// <summary>
+        /// HandDetected tracks the hand detected state.
+        /// Returns true if the list of tracked hands is not empty.
+        /// </summary>
+        public bool HandDetected
+        {
+            get { return false; }
+        }
+        //TODO: New way of doing things, Remove or update
+        //private HashSet<uint> trackedHands = new HashSet<uint>();
+
+        public int NumberOfTrackedHands
+        {
+            get { return 0; }
+        }
+#endif
+
+#if UNITY_EDITOR || UNITY_WSA
         void Awake()
         {
             InteractionManager.SourceDetected += InteractionManager_SourceDetected;

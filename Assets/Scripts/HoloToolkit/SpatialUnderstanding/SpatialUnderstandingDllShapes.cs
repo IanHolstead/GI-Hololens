@@ -22,6 +22,7 @@ namespace HoloToolkit.Unity
     /// </summary>
     public static class SpatialUnderstandingDllShapes
     {
+#if UNITY_EDITOR || UNITY_WSA
         /// <summary>
         /// Result structure returned by shape queries
         /// </summary>
@@ -826,6 +827,7 @@ namespace HoloToolkit.Unity
             public int Param_Int_0;
             public int Param_Int_1;
         };
+#endif
 
         // Functions
         /// <summary>
@@ -837,7 +839,8 @@ namespace HoloToolkit.Unity
         /// <param name="shapeCount">Length of the array passed in shapeData, the return value will never exceed this value</param>
         /// <param name="shapeData">An array of ShapeResult structures to receive the results of the query</param>
         /// <returns>Number of positions found. This number will never exceed shapeCount (the space provided for the results in shapeData).</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+        //TODO: All ifdefs here use to be just #if UNITY_WSA. I added unity editor so they can be used when remoting but that might (big might) break stuff
+#if UNITY_EDITOR || UNITY_WSA
         // Queries (shapes)
         [DllImport("SpatialUnderstanding")]
         public static extern int QueryShape_FindPositionsOnShape(
@@ -864,7 +867,7 @@ namespace HoloToolkit.Unity
         /// <param name="shapeCount">Length of the array passed in shapeData, the return value will never exceed this value</param>
         /// <param name="shapeData">An array of ShapeResult structures to receive the results of the query</param>
         /// <returns>Number of shapes found. This number will never exceed shapeCount (the space provided for the results in shapeData).</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
         [DllImport("SpatialUnderstanding")]
         public static extern int QueryShape_FindShapeHalfDims(
             [In] string shapeName,          // char*
@@ -891,7 +894,7 @@ namespace HoloToolkit.Unity
         /// <param name="shapeConstraints">Length of the shape constraint array passed in the constraints parameter</param>
         /// <param name="constraints">Array of ShapeConstraint structures</param>
         /// <returns></returns>
-#if UNITY_METRO && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
         [DllImport("SpatialUnderstanding")]
         public static extern int AddShape(
             [In] string shapeName,
@@ -915,7 +918,7 @@ namespace HoloToolkit.Unity
         /// Runs the shape analysis. This should be called after scanning has been 
         /// finalized and shapes have been defined with AddShape.
         /// </summary>
-#if UNITY_METRO && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
         [DllImport("SpatialUnderstanding")]
         public static extern void ActivateShapeAnalysis();
 #else
@@ -927,7 +930,7 @@ namespace HoloToolkit.Unity
         /// <summary>
         /// Removes all shapes defined by AddShape.
         /// </summary>
-#if UNITY_METRO && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
         [DllImport("SpatialUnderstanding")]
         public static extern void RemoveAllShapes();
 #else

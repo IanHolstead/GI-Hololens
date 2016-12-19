@@ -92,7 +92,14 @@ namespace HoloToolkit.Unity
         /// Indicates the current state of the Surface Observer.
         /// </summary>
         public ObserverStates ObserverState { get; private set; }
+#else
+        public ObserverStates ObserverState
+        {
+            get { return ObserverStates.Stopped; }
+        }
+#endif
 
+#if UNITY_EDITOR || UNITY_WSA
         protected override void Awake()
         {
             base.Awake();

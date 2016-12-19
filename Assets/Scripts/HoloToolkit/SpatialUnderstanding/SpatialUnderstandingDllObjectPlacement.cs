@@ -15,6 +15,7 @@ namespace HoloToolkit.Unity
     /// </summary>
     public static class SpatialUnderstandingDllObjectPlacement
     {
+#if UNITY_EDITOR || UNITY_WSA
         /// <summary>
         /// Defines an object placement query. A query consists of
         /// a type a name, type, set of rules, and set of constraints.
@@ -439,6 +440,7 @@ namespace HoloToolkit.Unity
             public Vector3 Right;
             public Vector3 Up;
         };
+#endif
 
         // Functions
         /// <summary>
@@ -446,7 +448,8 @@ namespace HoloToolkit.Unity
         /// scanning phase has finish and the playspace has been finalized.
         /// </summary>
         /// <returns></returns>
-#if UNITY_METRO && !UNITY_EDITOR
+//TODO: All ifdefs here use to be just #if UNITY_WSA. I added unity editor so they can be used when remoting but that might (big might) break stuff
+#if UNITY_EDITOR || UNITY_WSA
         [DllImport("SpatialUnderstanding")]
         public static extern int Solver_Init();
 #else
@@ -477,7 +480,7 @@ namespace HoloToolkit.Unity
         /// <param name="placementConstraints">Array of ObjectPlacementConstraint structures, defining the constraints</param>
         /// <param name="placementResult">Pointer to an ObjectPlacementResult structure to receive the result of the query </param>
         /// <returns>Zero on failure, one on success</returns>
-#if UNITY_METRO && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
         [DllImport("SpatialUnderstanding")]
         public static extern int Solver_PlaceObject(
             [In] string objectName,
@@ -509,7 +512,7 @@ namespace HoloToolkit.Unity
         /// </summary>
         /// <param name="objectName"></param>
         /// <returns></returns>
-#if UNITY_METRO && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
         [DllImport("SpatialUnderstanding")]
         public static extern int Solver_RemoveObject(
             [In] string objectName);
@@ -527,7 +530,7 @@ namespace HoloToolkit.Unity
         /// Objects placed with with Solver_PlaceObject persist until removed
         /// and are considered in subsequent queries by some rules and constraints.
         /// </summary>
-#if UNITY_METRO && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
         [DllImport("SpatialUnderstanding")]
         public static extern void Solver_RemoveAllObjects();
 #else

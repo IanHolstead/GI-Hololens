@@ -47,12 +47,15 @@ namespace HoloToolkit.Unity
         {
             get
             {
-#if UNITY_METRO && !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_WSA
                 return true;
-#endif
+#else
                 return false;
+#endif
             }
         }
+
+#if UNITY_EDITOR || UNITY_WSA
         /// <summary>
         /// Reference to the SpatialUnderstandingDLL class (wraps the understanding dll functions).
         /// </summary>
@@ -238,7 +241,8 @@ namespace HoloToolkit.Unity
             }
 
             // Real-Time scan
-            Update_Scan(Time.deltaTime);
+            Update_Scan(Time.deltaTime); 
         }
+#endif
     }
 }

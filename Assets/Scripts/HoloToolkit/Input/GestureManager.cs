@@ -23,6 +23,7 @@ namespace HoloToolkit.Unity
     [RequireComponent(typeof(GazeManager))]
     public partial class GestureManager : Singleton<GestureManager>
     {
+#if UNITY_EDITOR || UNITY_WSA
         /// <summary>
         /// Occurs when a manipulation gesture has started
         /// </summary>
@@ -82,7 +83,6 @@ namespace HoloToolkit.Unity
             }
         }
 
-#if UNITY_EDITOR || UNITY_WSA
         private GestureRecognizer gestureRecognizer;
         // We use a separate manipulation recognizer here because the tap gesture recognizer cancels
         // capturing gestures whenever the GazeManager focus changes, which is not the behavior
