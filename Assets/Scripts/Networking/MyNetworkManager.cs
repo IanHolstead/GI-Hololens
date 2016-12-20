@@ -21,6 +21,10 @@ public class MyNetworkManager : NetworkManager
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
+        foreach(UnityEngine.Networking.PlayerController controller in conn.playerControllers)
+        {
+            //controller.gameObject.GetComponent<PlayerController>().TargetSetID(conn, )
+        }
     }
 
     public override void OnClientDisconnect(NetworkConnection conn)

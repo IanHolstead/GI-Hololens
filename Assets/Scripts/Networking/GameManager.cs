@@ -1,12 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class GameManager : NetworkBehaviour
+public class GameManager : HoloToolkit.Unity.Singleton<GameManager>
 {
-    public static GameManager instance;
-    [Header("Gameplay Script Classes")]
+    //[Header("Gameplay Script Classes")]
     //public UnityEditor.MonoScript gameMode;
     //public UnityEditor.MonoScript gameState;
     //public UnityEditor.MonoScript playerState;
@@ -27,7 +25,7 @@ public class GameManager : NetworkBehaviour
     public void Awake()
     {
         Logger.Log("GameManagerAwake");
-        instance = this;
+
         GameObject gameModeRef = Instantiate(gameModePrefab);
         currentGameMode = (GameMode)gameModeRef.AddComponent(typeof(GameMode));
         //currentGameMode = (GameMode)gameModeRef.AddComponent(gameMode.GetClass());
@@ -42,8 +40,7 @@ public class GameManager : NetworkBehaviour
 
     void Start()
     {
-        Logger.Log("test");
-        Debug.LogError("TEST");
+        Logger.Log("GameManager Start");
     }
 
     public GameMode GetGameMode()

@@ -12,8 +12,8 @@ public class GameMode : NetworkBehaviour
 
     // Use this for initialization
     void Awake () {
+        Logger.Log("GameModeAwake");
         spawnLocation = FindObjectOfType<SpawnLocation>();
-        
     }
 
 
@@ -23,10 +23,23 @@ public class GameMode : NetworkBehaviour
 	}
 
     [Server]
+    public void UpdateConnectingClient(PlayerController connectingController)
+    {
+        Logger.Log("Updating controller: " + connectingController.ID);
+        foreach(KeyValuePair<int, PlayerController> controller in GameManager.Instance.GetGameState().activeControllers)
+        {
+            if (controller.Value != connectingController)
+            {
+                controller.Value.TargetSetID(connectingController.GetComponent<NetworkIdentity>().connectionToClient, controller.Key);
+            }
+        }
+    }
+
+    [Server]
     public void CreateNewCharacter(PlayerController controller)
     {
         //TODO: I'd like to use SpawnLocation.GetSpawnLocation() so it can check if the spawn is valid at runtime
-        GameObject newCharacter = Instantiate(GameManager.instance.characterPrefab, ((MyNetworkManager)NetworkManager.singleton).startPositions[0]);
+        GameObject newCharacter = Instantiate(GameManager.Instance.characterPrefab, ((MyNetworkManager)NetworkManager.singleton).startPositions[0]);
         newCharacter.AddComponent(typeof(Character));
         NetworkServer.Spawn(newCharacter);
         //newCharacter.AddComponent(playerCharacter.GetClass());
@@ -36,10 +49,11 @@ public class GameMode : NetworkBehaviour
     [Server]
     public int RegisterNewCharacter(Character character)
     {
+        Logger.Log("Registering new character: " + character);
         int assignedID = nextCharacterID;
         nextCharacterID++;
 
-        GameManager.instance.GetGameState().AddCharacter(assignedID, character);
+        GameManager.Instance.GetGameState().AddCharacter(assignedID, character);
 
         return assignedID;
     }
@@ -48,16 +62,17 @@ public class GameMode : NetworkBehaviour
     [Server]
     public bool RemoveCharacter(int id)
     {
-        return GameManager.instance.GetGameState().characters.Remove(id);
+        return GameManager.Instance.GetGameState().characters.Remove(id);
     }
 
     [Server]
     public int RegisterNewPlayer(PlayerController controller)
     {
+        Logger.Log("Registering new Controller: " + controller);
         int assignedID = nextPlayerID;
         nextPlayerID++;
 
-        GameManager.instance.GetGameState().AddController(assignedID, controller);
+        GameManager.Instance.GetGameState().AddController(assignedID, controller);
         CreateNewCharacter(controller);
 
         return assignedID;
@@ -67,6 +82,6 @@ public class GameMode : NetworkBehaviour
     [Server]
     public bool RemovePlayer(int id)
     {
-        return GameManager.instance.GetGameState().activeControllers.Remove(id);
+        return GameManager.Instance.GetGameState().activeControllers.Remove(id);
     }
 }

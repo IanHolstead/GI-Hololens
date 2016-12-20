@@ -13,7 +13,16 @@ public class GameState : NetworkBehaviour
     internal Dictionary<int, PlayerController> activeControllers;
     internal Dictionary<int, Character> characters;
 
-    
+    void OnGUI()
+    {
+        if (GetComponent<NetworkIdentity>().isServer)
+            GUILayout.Label("Running as a server");
+        else
+            if (GetComponent<NetworkIdentity>().isClient)
+            GUILayout.Label("Running as a client");
+
+    }
+
     public void Awake()
     {
         //instance = this;

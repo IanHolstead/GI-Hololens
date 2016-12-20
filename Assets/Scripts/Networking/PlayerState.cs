@@ -42,7 +42,7 @@ public class PlayerState : NetworkBehaviour {
         if (id == -1)
         {
             this.id = id;
-            GameManager.instance.GetGameState().AddCharacter(id, character);
+            GameManager.Instance.GetGameState().AddCharacter(id, character);
         }
     }
 

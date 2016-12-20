@@ -12,7 +12,7 @@ public class PlayerController : NetworkBehaviour {
     /// </summary>
     bool allowMultiPossess = false;
 
-    public int id = -1;
+    private int id = -1;
 
     public int ID
     {
@@ -20,44 +20,51 @@ public class PlayerController : NetworkBehaviour {
         {
             return id;
         }
+        private set
+        {
+            Logger.Log("PC: RPC " + ID + " current ID: " + ID);
+            if (ID == -1)
+            {
+                Logger.Log("Setting ID to :" + ID);
+                id = value;
+                GameManager.Instance.GetGameState().AddController(ID, this);
+            }
+        }
     }
 
     [ClientRpc]
     private void RpcSetID(int id)
     {
-        if (id == -1)
-        {
-            Logger.Log("PC: RPC " + id);
-            this.id = id;
-            GameManager.instance.GetGameState().AddController(id, this);
-        }
+        ID = id;
+    }
+
+    [TargetRpc]
+    public void TargetSetID(NetworkConnection target, int id)
+    {
+        ID = id;
     }
 
     GamePadWrapper.UpdateStateDel gamePadStateUpdater;
     GamePadWrapper gamePad;
 
-    void OnGUI()
-    {
-        if (GetComponent<NetworkIdentity>().isServer)
-            GUILayout.Label("Running as a server");
-        else
-            if (GetComponent<NetworkIdentity>().isClient)
-            GUILayout.Label("Running as a client");
-
-    }
-
     protected void Awake() {
         charactersPossessed = new HashSet<Character>();
     }
 
-    protected void Start()
+    protected virtual void Start()
     {
         if (isServer)
         {
             Logger.Log("PC: Server");
-            id = GameManager.instance.GetGameMode().RegisterNewPlayer(this);
+            id = GameManager.Instance.GetGameMode().RegisterNewPlayer(this);
             Logger.Log("PC: Server. ID: " + id);
-            RpcSetID(id);
+            RpcSetID(ID);
+
+            //this means that a new (non-host) player is joining
+            if (!isLocalPlayer)
+            {
+                GameManager.Instance.GetGameMode().UpdateConnectingClient(this);
+            }
         }
         
     }
@@ -71,7 +78,7 @@ public class PlayerController : NetworkBehaviour {
     [ClientRpc]
     private void RpcSetCharacter(int characterID, bool possess)
     {
-        Character character = GameManager.instance.GetGameState().GetPlayerCharacter(characterID);
+        Character character = GameManager.Instance.GetGameState().GetPlayerCharacter(characterID);
         if (possess)
         {
             charactersPossessed.Add(character);
